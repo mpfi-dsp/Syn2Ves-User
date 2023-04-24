@@ -25,8 +25,8 @@ from views.logger import Logger
 from globals import PALETTE_OPS, PROG_COLOR_1, PROG_COLOR_2, REAL_COLOR, RAND_COLOR
 from typings import Unit, Workflow, DataObj, OutputOptions, WorkflowObj
 from typing import List, Tuple
-from utils import Progress, create_color_pal, enum_to_unit, to_coord_list, pixels_conversion, avg_vals
-from threads import AnalysisWorker, DownloadWorker
+from utils import Progress, create_color_pal, enum_to_unit, to_pair_list, pixels_conversion, avg_vals
+from threads import RotationAnalysisWorker, DownloadWorker
 
 class WorkflowPage2(QWidget):
     """
@@ -53,7 +53,7 @@ class WorkflowPage2(QWidget):
     @pg: primary loading/progress bar ref
     """
 
-    def __init__(self, synFiles: List[str], vesFiles: List[str], pairings: pd.DataFrame, output: str,
+    def __init__(self, pairs: List[Tuple[int, int]], synFiles: List[str], vesFiles: List[str], pairings: pd.DataFrame, output: str,
                  pg: Progress = None, log: Logger = None):
         super().__init__()
         # init class vars: allow referencing within functions without passing explicitly
@@ -65,6 +65,8 @@ class WorkflowPage2(QWidget):
         self.vesFiles = vesFiles
         self.pairings = pairings
         self.output = output
+
+        print(pairs[0])
 
         # init layout
         layout = QFormLayout()
@@ -238,6 +240,7 @@ class WorkflowPage2(QWidget):
         self.img_cont.addWidget(self.image_frame)
         self.img_cont.addWidget(self.graph_frame)
         layout.addRow(self.img_cont)
+        '''
         # loading bar
         self.progress = QProgressBar(self)
         self.progress.setGeometry(0, 0, 300, 25)
@@ -255,6 +258,7 @@ class WorkflowPage2(QWidget):
         self.prog_animation.finished.connect(
             self.prog_animation.start if self.progress.value() < 100 else self.prog_animation.stop)
         self.prog_animation.start()
+        '''
         # run & download btns
         self.run_btn = QPushButton('Run Again', self)
         self.run_btn.setStyleSheet(
@@ -274,8 +278,8 @@ class WorkflowPage2(QWidget):
         self.setLayout(layout)
         # props to enable and disable when running wf
         self.wf_props = [self.run_btn, self.image_frame, self.graph_frame, self.gen_rand_cb, self.gen_real_cb]
-        # run on init
-        self.run(wf, coords, alt_coords)'''
+        '''# run on init
+        self.run(pairs, synFiles, vesFiles)
 
     def update_progress(self, value: int):
         """ UPDATE PROGRESS BAR """
@@ -334,32 +338,28 @@ class WorkflowPage2(QWidget):
             "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 3px; background: #007267; color: white; border-radius: 7px; ")
         self.download_btn.setDisabled(False)
 
-    def run(self, wf: WorkflowObj, coords: List[Tuple[float, float]], alt_coords: List[Tuple[float, float]]):
+    def run(self, pairs: List[Tuple[float, float]], synFiles: str, vesFiles: str):
         """ RUN WORKFLOW """
         try:
             prog_wrapper = Progress()
             prog_wrapper.prog.connect(self.update_progress)
             self.prog_animation.start()
 
-            for prop in self.wf_props:
-                prop.setEnabled(False)
+            # for prop in self.wf_props:
+                # prop.setEnabled(False)
 
             # set coords
-            self.coords = coords
-            self.alt_coords = alt_coords
-            self.rand_coords = gen_random_coordinates(img_path=self.img_drop.currentText(),
-                                                      mask_path=self.mask_drop.currentText(), count=int(
-                    self.n_coord_ip.text()) if self.n_coord_ip.text() else len(coords))
+            self.pairs = pairs
+
             # obtain custom props
-            vals = self.get_custom_values()
-            logging.info('%s: running analysis, opening thread', wf['name'])
+            # vals = self.get_custom_values()
+            logging.info('Running offset analysis, opening thread')
             # generate thread
             self.thread = QThread()
-            self.worker = AnalysisWorker()
+            self.worker = RotationAnalysisWorker()
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(
-                partial(self.worker.run, wf, vals, coords, self.rand_coords, alt_coords, self.img_drop.currentText(),
-                        self.mask_drop.currentText(), self.draw_clust_area))
+                partial(self.worker.run, pairs, synFiles, vesFiles))
             self.worker.progress.connect(self.update_progress)
             self.worker.finished.connect(self.on_receive_data)
             self.worker.finished.connect(self.thread.quit)

@@ -3,9 +3,9 @@ PyQt5
 numexpr
 seaborn
 Pillow
-sklearn
 opencv-python
 matplotlib
 pandas
 typing_extensions
 pyinstaller
+pyvista

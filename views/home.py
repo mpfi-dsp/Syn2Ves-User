@@ -47,7 +47,7 @@ class HomePage(QWidget):
         # img btn
         img_btn = QPushButton('Set Synapse Folder', self)
         img_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        img_btn.setToolTip('Supports TIF, PNG, JPG, or JPEG format..')
+        img_btn.setToolTip('Must be folder of .STL format files...')
         img_btn.clicked.connect(partial(self.open_file_picker, FileType.SYNPASE))
         # img input
         self.img_le = QLineEdit()
@@ -57,7 +57,7 @@ class HomePage(QWidget):
         # mask btn
         mask_btn = QPushButton('Set Vesicle Folder', self)
         mask_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        mask_btn.setToolTip('Supports TIF, PNG, JPG, or JPEG format. Mask can be any color with white background.')
+        mask_btn.setToolTip('Must be folder of .STL format files...')
         mask_btn.clicked.connect(partial(self.open_file_picker,  FileType.VESICLE))
         # mask input
         self.mask_le = QLineEdit()
@@ -67,11 +67,16 @@ class HomePage(QWidget):
         # csv btn
         csv_btn = QPushButton('Set Pairing CSV', self)
         csv_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        csv_btn.setToolTip('Particle population. CSV must have X and Y columns with no spaces.')
+        csv_btn.setToolTip('Synapse and Vesicle Paits. CSV must have synLabel and vesLabel columns with no spaces.')
         csv_btn.clicked.connect(partial(self.open_file_picker, FileType.CSV))
         # csv input
         self.csv_le = QLineEdit()
         self.csv_le.setPlaceholderText("None Selected (CSV)")
+        
+        self.img_le.setText("C:/Users/AlexisA/Documents/2023-02-22_12-54-06 - Normal/Final Synapses")
+        self.mask_le.setText("C:/Users/AlexisA/Documents/2023-02-22_12-54-06 - Normal/Final Vesicles")
+        self.csv_le.setText("Z:/Undergrads/Arman 2022/SD3 AND NLGN MESH EXPORTS/Pairing by Mesh NND/SD3_5/synVesPairsFromMesh.csv")
+        
         # add csv row
         layout.addRow(csv_btn, self.csv_le)
 

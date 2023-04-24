@@ -122,13 +122,18 @@ def enum_to_unit(val):
         return 'undefined'
 
 
-def to_coord_list(df: pd.DataFrame) -> List[Tuple[float, float]]:
+def to_pair_list(df: pd.DataFrame) -> List[Tuple[float, float]]:
     # turn df into coordinate list
-    x_coordinates = np.array(df['X'])
-    y_coordinates = np.array(df['Y'])
+    print(df)
+    df = df.sort_values(by=['synLabel'])
+
+    syn_labels = np.array(df['synLabel'])
+    ves_labels = np.array(df['vesLabel'])
+
     coords = []
-    for i in range(len(x_coordinates)):
-        coords.append([float(y_coordinates[i]), float(x_coordinates[i])])
+    for i in range(len(syn_labels)):
+        coords.append([int(syn_labels[i]), int(ves_labels[i])])
+
     return coords
 
 

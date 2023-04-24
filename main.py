@@ -5,7 +5,7 @@ import pandas as pd
 from globals import WORKFLOWS, NAV_ICON, DEFAULT_OUTPUT_DIR, VERSION_NUMBER
 from views.home import HomePage
 from typings import Unit, OutputOptions
-from utils import pixels_conversion, unit_to_enum, to_coord_list
+from utils import pixels_conversion, unit_to_enum, to_pair_list
 from views.logger import Logger
 # from views.workflow import WorkflowPage
 from views.workflow2 import WorkflowPage2
@@ -46,7 +46,7 @@ class GoldInAndOut(QWidget):
     """ PARENT WINDOW INITIALIZATION """
     def __init__(self):
         super().__init__()
-        self.setWindowTitle(f'GoldInAndOut {VERSION_NUMBER}')
+        self.setWindowTitle(f'Syn2Ves {VERSION_NUMBER}')
         self.setWindowIcon(QIcon(':/icons/logo.ico'))
         # self.setWindowIcon(QIcon('./logo.png'))
         self.setMinimumSize(QSize(850, 500))
@@ -64,8 +64,8 @@ class GoldInAndOut(QWidget):
         self.page_stack = QStackedWidget(self)
         layout.addWidget(self.page_stack)
         # add main page
-        # self.home_page = HomePage(start=self.init_workflows)
-        self.home_page = HomePage(start=self.test)
+        self.home_page = HomePage(start=self.init_workflows)
+        # self.home_page = HomePage(start=self.test)
         logging.info("Building layout...")
         # init ui
         self.init_ui()
@@ -137,10 +137,10 @@ class GoldInAndOut(QWidget):
     def init_workflows(self):
         try:
             """ INITIALIZE CHILD WORKFLOW WINDOWS """
-            if len(self.home_page.img_le.text()) > 0 and len(self.home_page.csv_le.text()) > 0 and (self.props_checked() == True):
+            if len(self.home_page.img_le.text()) > 0 and len(self.home_page.csv_le.text()) > 0:
                 # gui elements to disable when running
                 self.home_props = [self.home_page.start_btn,
-                                   self.home_page.img_le,  self.home_page.mask_le, self.home_page.csv_le, self.home_page.csv2_le, self.home_page.ip_scalar_type, self.home_page.op_scalar_type, self.home_page.output_dir_le, self.home_page.dod_cb, self.home_page.csvs_lb_i, self.home_page.csvs_ip_o, self.home_page.clust_area, self.home_page.show_logs_btn]
+                                   self.home_page.img_le,  self.home_page.mask_le, self.home_page.csv_le, self.home_page.output_dir_le, self.home_page.show_logs_btn]
                 for prop in self.home_props:
                     prop.setEnabled(False)
                 self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 450px; color: white; border-radius: 7px; background: #ddd")
@@ -153,13 +153,18 @@ class GoldInAndOut(QWidget):
             print(e, traceback.format_exc())
     
     def test(self):
-        # self.home_props = [self.home_page.start_btn,
-        #                     self.home_page.img_le,  self.home_page.mask_le, self.home_page.csv_le, self.home_page.show_logs_btn]
-        # for prop in self.home_props:
-        #     prop.setEnabled(False)
+        self.home_props = [self.home_page.start_btn,
+                            self.home_page.img_le,  self.home_page.mask_le, self.home_page.csv_le, self.home_page.show_logs_btn]
+        for prop in self.home_props:
+            prop.setEnabled(False)
 
-        # self.home_page.progress.setValue(50)
-
+        self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #ddd")
+        
+        self.home_page.progress.setValue(50)
+        item = QListWidgetItem(NAV_ICON, str("Test"), self.nav_list)
+        item.setSizeHint(QSize(60, 60))
+        item.setTextAlignment(Qt.AlignCenter)
+        print("Test")
         self.page_stack.addWidget(
                         WorkflowPage2(synFiles=self.home_page.img_le.text(),
                                     vesFiles=self.home_page.mask_le.text(),
@@ -173,51 +178,25 @@ class GoldInAndOut(QWidget):
 
     def on_loaded_data(self, loaded_data: list):
         try:
-            self.COORDS, self.ALT_COORDS = loaded_data
+            self.COORDS = loaded_data
             # file paths
             img_path: str = self.home_page.img_le.text() 
             mask_path: str = self.home_page.mask_le.text() 
             csv_path: str = self.home_page.csv_le.text() 
-            csv2_path: str = self.home_page.csv2_le.text() 
-            # output unit options
-            ou: Unit = unit_to_enum(self.home_page.op_scalar_type.currentText() if self.home_page.op_scalar_type.currentText(
-            ) is not None else self.home_page.ip_scalar_type.currentText() if '(in&out)' in self.home_page.csvs_lb_i.text() else 'px')
-            s_o: float = float(self.home_page.csvs_ip_i.text() if '(in&out)' in self.home_page.csvs_lb_i.text(
-            ) else self.home_page.csvs_ip_o.text() if len(self.home_page.csvs_ip_o.text()) > 0 else 1)
-            # print("OUTPUT SCALAR", s_o)
-            dod: bool = self.home_page.dod_cb.isChecked()
-            o_dir: str = self.home_page.output_dir_le.text() if len(self.home_page.output_dir_le.text()) > 0 else DEFAULT_OUTPUT_DIR
-            output_ops: OutputOptions = OutputOptions(output_unit=ou, output_dir=o_dir, output_scalar=s_o, delete_old=dod)
-            c_area = self.home_page.clust_area.isChecked()
-
-            # determine workflow pages
-            wf_td = 0
-            for wf_cb in self.home_page.workflow_cbs:
-                if wf_cb.isChecked():
-                    wf_td += 1
             
-            # generate workflow pages
-            z = 0
-            for i in range(len(WORKFLOWS)):
-                if self.home_page.workflow_cbs[i].isChecked():
-                    z += 1
-                    item = QListWidgetItem(NAV_ICON, str(WORKFLOWS[i]['name']), self.nav_list)
-                    item.setSizeHint(QSize(60, 60))
-                    item.setTextAlignment(Qt.AlignCenter)
-                    print(WORKFLOWS[i]['name'])
-                    '''self.page_stack.addWidget(
-                        WorkflowPage(coords=self.COORDS,
-                                    alt_coords=self.ALT_COORDS,
-                                    wf=WORKFLOWS[i],
-                                    img=img_path,
-                                    mask=mask_path,
-                                    csv=csv_path,
-                                    csv2=csv2_path,
-                                    output_ops=output_ops,
-                                    pg=partial(self.update_main_progress, (int((z / wf_td * 100)))),
-                                    clust_area=c_area,
-                                    log=self.dlg
-                                    ))'''
+            item = QListWidgetItem(NAV_ICON, str("Test"), self.nav_list)
+            item.setSizeHint(QSize(60, 60))
+            item.setTextAlignment(Qt.AlignCenter)
+            print("Test")
+            self.page_stack.addWidget(
+                            WorkflowPage2(pairs = self.COORDS,
+                                        synFiles=self.home_page.img_le.text(),
+                                        vesFiles=self.home_page.mask_le.text(),
+                                        pairings=self.home_page.csv_le.text(),
+                                        output=self.home_page.output_dir_le.text(),
+                                        pg=self.update_main_progress,
+                                        log=self.dlg
+                                        ))
         except Exception as e:
             print(e, traceback.format_exc())
 
@@ -226,17 +205,12 @@ class GoldInAndOut(QWidget):
         try:
             # edit in production
             logging.info("Loading data...")
-            img_path: str = self.home_page.img_le.text() 
-            mask_path: str = self.home_page.mask_le.text() 
-            csv_path: str = self.home_page.csv_le.text() 
-            csv2_path: str = self.home_page.csv2_le.text() 
-            unit = unit_to_enum(self.home_page.ip_scalar_type.currentText()) if self.home_page.ip_scalar_type.currentText() else Unit.PIXEL
-            scalar = float(self.home_page.csvs_ip_i.text() if len(self.home_page.csvs_ip_i.text()) > 0 else 1)
+            csv_path: str = self.home_page.csv_le.text()
             # load in data in thread
             self.load_thread = QThread()
             self.load_worker = DataLoadWorker()
             self.load_worker.moveToThread(self.load_thread)
-            self.load_thread.started.connect(partial(self.load_worker.run, img_path, mask_path, csv_path, csv2_path, unit, scalar))
+            self.load_thread.started.connect(partial(self.load_worker.run, csv_path))
             self.load_worker.finished.connect(self.on_loaded_data)
             self.load_worker.finished.connect(self.load_thread.quit)
             self.load_worker.finished.connect(self.load_worker.deleteLater)

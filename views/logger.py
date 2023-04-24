@@ -21,7 +21,7 @@ class QPlainTextEditLogger(logging.Handler):
 class Logger(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('GoldInAndOut Logger')
+        self.setWindowTitle('Syn2Ves Logger')
         self.setWindowIcon(QIcon(':/icons/logo.ico'))
         self.setMinimumSize(QSize(600, 300))
         self.log_text_box = QPlainTextEditLogger(self)

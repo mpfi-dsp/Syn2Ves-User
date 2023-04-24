@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread, QSize, QByteArray
 from PyQt5.QtGui import QImage
-from utils import pixels_conversion, enum_to_unit, to_coord_list
+from utils import pixels_conversion, enum_to_unit, to_pair_list
 from globals import MAX_DIRS_PRUNE
 import os
 import traceback
@@ -21,25 +21,17 @@ import numpy as np
 import datetime
 import pandas as pd
 import shutil
+from newAlignCode import Syn2Ves
 
 
 class DataLoadWorker(QObject):
     finished = pyqtSignal(list)
 
-    def run(self, img_path: str = "", mask_path: str = "",  csv_path: str = "", csv2_path: str = "", unit: Unit = Unit.PIXEL, scalar: float = 1.0):
+    def run(self, csv_path: str = ""):
         try:
-            data = pd.read_csv(csv_path, sep=",")
-            scaled_df = pixels_conversion(data=data, unit=unit, scalar=scalar)
-            COORDS = to_coord_list(scaled_df)
-    
-            if len(csv2_path) > 0:
-                data = pd.read_csv(csv2_path, sep=",")
-                ALT_COORDS = to_coord_list(
-                    pixels_conversion(data=data, unit=unit, scalar=scalar))
-            else:
-                ALT_COORDS = gen_random_coordinates(img_path, mask_path, count=len(COORDS))
-    
-            self.finished.emit([COORDS, ALT_COORDS])
+            data = pd.read_csv(csv_path)
+            COORDS = to_pair_list(data)
+            self.finished.emit(COORDS)
             logging.info("Finished loading in and converting data")
         except Exception as e:
             self.dlg = Logger()
@@ -155,3 +147,20 @@ class DownloadWorker(QObject):
 class RotationAnalysisWorker(QObject):
     finished = pyqtSignal(object)
     progress = pyqtSignal(int)
+
+    def run(self, pairs: List[Tuple[int, int]], synFiles: str, vesFiles: str):
+        try:
+            real_df1 = real_df2 = rand_df1 = rand_df2 = pd.DataFrame()
+            
+            # Run Align Code
+            real_df1 = rand_df1 = Syn2Ves(synFiles, vesFiles, pairs, pb=self.progress)
+
+            self.output_data = DataObj(real_df1, real_df2, rand_df1, rand_df2)
+            self.finished.emit(self.output_data)
+            logging.info('finished analysis')
+        except Exception as e:
+            print("test 2")
+            self.dlg = Logger()
+            self.dlg.show()
+            logging.error(traceback.format_exc())
+            self.finished.emit({})
