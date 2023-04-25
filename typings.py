@@ -64,13 +64,14 @@ class DataObj:
     
 
 class OutputOptions:
-    output_unit: Unit
-    output_scalar: str
+    # output_unit: Unit
+    # output_scalar: str
     output_dir: str
-    delete_old: bool
+    # delete_old: bool
 
-    def __init__(self, output_scalar: str, output_unit: Unit = Unit.PIXEL, output_dir: str = "./output", delete_old: bool = False):
-        self.output_unit = output_unit
-        self.output_scalar = output_scalar
+    # def __init__(self, output_scalar: str, output_unit: Unit = Unit.PIXEL, output_dir: str = "./output", delete_old: bool = False):
+    def __init__(self, output_dir: str = "./output"):
+        # self.output_unit = output_unit
+        # self.output_scalar = output_scalar
         self.output_dir = output_dir
-        self.delete_old = delete_old
+        # self.delete_old = delete_old

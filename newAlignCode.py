@@ -12,13 +12,10 @@ from datetime import datetime
 from surface_area import getWhiteVals, maxmin_tuple
 import re
 from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread, QSize, QByteArray
+import logging
 
 def destroyPlot(plotter: pv.Plotter):
     plotter.close()
-
-    # pv.plotting._ALL_PLOTTERS.pop(plotter._id_name)
-    # plotter.renderers = None
-    # delattr(plotter, 'renderers')
     plotter._theme = None
     del plotter
 
@@ -139,17 +136,6 @@ def surfaceAreaAngle(path: str, camScales: list, x_range: list, y_range: list, z
     
     return(surfAreaVals, surfAreaImgs)
 
-# def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: pyqtSignal, outFilePath: str = ""):
-#     synFiles = num_sort(os.listdir(syn_path))
-#     vesFiles = num_sort(os.listdir(ves_path))
-    
-#     for i in range(len(pairing)):
-
-#         # syn = os.path.join(syn_path, synFiles[df1['synLabel'][idx]-1])
-#         # ves = os.path.join(ves_path, vesFiles[df1['vesLabel'][idx]-1])
-
-#         print(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
-
 def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: pyqtSignal, outFilePath: str = ""):
     camVesPos_x = []
     camVesPos_y = []
@@ -168,16 +154,12 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
     iouVals = []
     iosVals = []
 
-    synInteg = []
-    vesInteg = []
-
     synFiles = num_sort(os.listdir(syn_path))
     vesFiles = num_sort(os.listdir(ves_path))
 
     pairing = pairing[:5]
-    print(pairing)
     
-    for i in range(len(pairing)+1):
+    for i in range(len(pairing)):
 
         print(i/len(pairing) * 100)
         pb.emit(int(i/len(pairing) * 100))
@@ -186,6 +168,7 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         ves = os.path.join(ves_path, vesFiles[pairing[i][1]-1])
 
         print(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
+        logging.info(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
 
         sy_reader = pv.get_reader(syn)
         ves_reader = pv.get_reader(ves)
@@ -470,13 +453,15 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         iouVals.append(iou)
         iosVals.append(ios)
 
-        # synInteg.append(int(pairing[i][0]))
-        # vesInteg.append(int(pairing[i][1]))
+    all_syn = [row[0] for row in pairing]
+    all_ves = [row[1] for row in pairing]
 
-        # print(synInteg)
-        # print(vesInteg)
+    print(all_syn)
+    print(all_ves)
 
-    d = {'synLabel': synInteg, 'vesLabel': vesInteg, 'OG_Ves_X': camVesPos_x, 'OG_Ves_Y': camVesPos_y, 'OG_Ves_Z': camVesPos_z, 'Ves_X': sfaVesPos_x, 'Ves_Y': sfaVesPos_y, 'Ves_Z': sfaVesPos_z, 'Syn_X': synPos_x, 'Syn_Y': synPos_y, 'Syn_Z': synPos_z, 'VectorAngle': vesAngle, 'Intersect': intersectVals, 'IOU': iouVals, 'IOS': iosVals}
+
+
+    d = {'synLabel': all_syn, 'vesLabel': all_ves, 'OG_Ves_X': camVesPos_x, 'OG_Ves_Y': camVesPos_y, 'OG_Ves_Z': camVesPos_z, 'Ves_X': sfaVesPos_x, 'Ves_Y': sfaVesPos_y, 'Ves_Z': sfaVesPos_z, 'Syn_X': synPos_x, 'Syn_Y': synPos_y, 'Syn_Z': synPos_z, 'VectorAngle': vesAngle, 'Intersect': intersectVals, 'IOU': iouVals, 'IOS': iosVals}
     df = pd.DataFrame(data=d)
     print(df)
     return(df)

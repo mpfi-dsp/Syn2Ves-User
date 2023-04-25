@@ -124,7 +124,6 @@ def enum_to_unit(val):
 
 def to_pair_list(df: pd.DataFrame) -> List[Tuple[float, float]]:
     # turn df into coordinate list
-    print(df)
     df = df.sort_values(by=['synLabel'])
 
     syn_labels = np.array(df['synLabel'])

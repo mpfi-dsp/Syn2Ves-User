@@ -22,6 +22,7 @@ import datetime
 import pandas as pd
 import shutil
 from newAlignCode import Syn2Ves
+# from datetime import datetime
 
 
 class DataLoadWorker(QObject):
@@ -80,23 +81,25 @@ class AnalysisWorker(QObject):
 class DownloadWorker(QObject):
     finished = pyqtSignal()
 
-    def run(self, wf: WorkflowObj, data: DataObj, output_ops: OutputOptions, img: str, display_img: QImage, graph: QImage):
+    def run(self, data: DataObj, output_ops: OutputOptions):
         """ DOWNLOAD FILES """
+        dl_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
         # logging.info(output_ops.delete_old, output_ops.output_dir, output_ops.output_scalar, output_ops.output_unit)
         try:
             out_start = output_ops.output_dir if output_ops.output_dir is not None else './output'
             # delete old files to make space if applicable
-            o_dir = f'{out_start}/{wf["name"].lower()}'
-            if output_ops.delete_old:
-                while len(os.listdir(o_dir)) >= MAX_DIRS_PRUNE:
-                    oldest_dir = \
-                        sorted([os.path.abspath(
-                            f'{o_dir}/{f}') for f in os.listdir(o_dir)], key=os.path.getctime)[0]
-                    # filter out macos system files
-                    if '.DS_Store' not in oldest_dir:
-                        logging.info("pruning %s", oldest_dir)  
-                        shutil.rmtree(oldest_dir)
-                logging.info('%s: pruned old output', wf["name"])
+            # o_dir = f'{out_start}/{dl_time}'
+            # if output_ops.delete_old:
+            #     while len(os.listdir(o_dir)) >= MAX_DIRS_PRUNE:
+            #         oldest_dir = \
+            #             sorted([os.path.abspath(
+            #                 f'{o_dir}/{f}') for f in os.listdir(o_dir)], key=os.path.getctime)[0]
+            #         # filter out macos system files
+            #         if '.DS_Store' not in oldest_dir:
+            #             logging.info("pruning %s", oldest_dir)  
+            #             shutil.rmtree(oldest_dir)
+            #     logging.info('%s: pruned old output', str(dl_time))
         except Exception as e:
             self.dlg = Logger()
             self.dlg.show()
@@ -106,38 +109,36 @@ class DownloadWorker(QObject):
         # download files
         try:
             logging.info(
-                '%s: prepare to download output', wf["name"])
-            img_name = os.path.splitext(
-                os.path.basename(img))[0]
-            out_dir = f'{out_start}/{wf["name"].lower()}/{img_name}-{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
+                'Prepare to download output')
+            out_dir = f'{out_start}/{dl_time}'
             os.makedirs(out_dir, exist_ok=True)
             logging.info('attempting to save cleaned dfs')
-            data.final_real.to_csv(f'{out_dir}/real_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv',
+            data.final_real.to_csv(f'{out_dir}/OutputData.csv',
                                    index=False, header=True)
-            data.final_rand.to_csv(f'{out_dir}/rand_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv',
-                                   index=False, header=True)
-            if display_img:
-                display_img.save(
-                    f'{out_dir}/drawn_{wf["name"].lower()}_img.tif')
-            else:
-                logging.info(
-                    'No display image generated. An error likely occurred when running workflow.')
-            graph.save(f'{out_dir}/{wf["name"].lower()}_graph.jpg')
+            # data.final_rand.to_csv(f'{out_dir}/rand_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv',
+            #                        index=False, header=True)
+            # if display_img:
+            #     display_img.save(
+            #         f'{out_dir}/drawn_{wf["name"].lower()}_img.tif')
+            # else:
+            #     logging.info(
+            #         'No display image generated. An error likely occurred when running workflow.')
+            # graph.save(f'{out_dir}/{wf["name"].lower()}_graph.jpg')
             # if workflow fills full dfs, output those two
-            logging.info('attempting to save dfs')
-            if not data.real_df2.empty and not data.rand_df2.empty:
-                real_df2 = pixels_conversion(
-                    data=data.real_df2, unit=Unit.PIXEL, scalar=float(output_ops.output_scalar))
-                rand_df2 = pixels_conversion(
-                    data=data.rand_df2, unit=Unit.PIXEL, scalar=float(output_ops.output_scalar))
-                real_df2.to_csv(
-                    f'{out_dir}/detailed_real_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv', index=False,
-                    header=True)
-                rand_df2.to_csv(
-                    f'{out_dir}/detailed_rand_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv', index=False,
-                    header=True)
+            # logging.info('attempting to save dfs')
+            # if not data.real_df2.empty and not data.rand_df2.empty:
+            #     real_df2 = pixels_conversion(
+            #         data=data.real_df2, unit=Unit.PIXEL, scalar=float(output_ops.output_scalar))
+            #     rand_df2 = pixels_conversion(
+            #         data=data.rand_df2, unit=Unit.PIXEL, scalar=float(output_ops.output_scalar))
+            #     real_df2.to_csv(
+            #         f'{out_dir}/detailed_real_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv', index=False,
+            #         header=True)
+            #     rand_df2.to_csv(
+            #         f'{out_dir}/detailed_rand_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv', index=False,
+            #         header=True)
             self.finished.emit()
-            logging.info("%s: downloaded output, closing thread", wf["name"])
+            logging.info("Downloaded output, closing thread")
         except Exception as e:
             self.dlg = Logger()
             self.dlg.show()

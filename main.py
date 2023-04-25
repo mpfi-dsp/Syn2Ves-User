@@ -183,6 +183,9 @@ class GoldInAndOut(QWidget):
             img_path: str = self.home_page.img_le.text() 
             mask_path: str = self.home_page.mask_le.text() 
             csv_path: str = self.home_page.csv_le.text() 
+
+            o_dir: str = self.home_page.output_dir_le.text() if len(self.home_page.output_dir_le.text()) > 0 else DEFAULT_OUTPUT_DIR
+            output_ops: OutputOptions = OutputOptions(output_dir=o_dir)
             
             item = QListWidgetItem(NAV_ICON, str("Test"), self.nav_list)
             item.setSizeHint(QSize(60, 60))
@@ -194,6 +197,7 @@ class GoldInAndOut(QWidget):
                                         vesFiles=self.home_page.mask_le.text(),
                                         pairings=self.home_page.csv_le.text(),
                                         output=self.home_page.output_dir_le.text(),
+                                        output_ops=output_ops,
                                         pg=self.update_main_progress,
                                         log=self.dlg
                                         ))

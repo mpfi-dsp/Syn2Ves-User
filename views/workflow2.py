@@ -53,14 +53,14 @@ class WorkflowPage2(QWidget):
     @pg: primary loading/progress bar ref
     """
 
-    def __init__(self, pairs: List[Tuple[int, int]], synFiles: List[str], vesFiles: List[str], pairings: pd.DataFrame, output: str,
+    def __init__(self, pairs: List[Tuple[int, int]], synFiles: List[str], vesFiles: List[str], pairings: pd.DataFrame, output: str, output_ops: OutputOptions = None,
                  pg: Progress = None, log: Logger = None):
         super().__init__()
         # init class vars: allow referencing within functions without passing explicitly
         self.is_init = False
         self.pg = pg
         self.dlg = log
-
+        self.output_ops = output_ops
         self.synFiles = synFiles
         self.vesFiles = vesFiles
         self.pairings = pairings
@@ -316,17 +316,16 @@ class WorkflowPage2(QWidget):
     def get_custom_values(self):
         return [int(self.cstm_props[i].text()) if self.cstm_props[i].text() else int(self.wf['props'][i]['placeholder']) for i in range(len(self.cstm_props))]
 
-    def download(self, output_ops: OutputOptions, wf: WorkflowObj):
-        logging.info('%s: started downloading, opening thread', wf['name'])
-        self.download_btn.setStyleSheet(
-            "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 3px; background: #ddd; color: white; border-radius: 7px; ")
-        self.download_btn.setDisabled(True)
+    def download(self, output_ops: OutputOptions):
+        logging.info('Started downloading, opening thread')
+        # self.download_btn.setStyleSheet(
+            # "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 3px; background: #ddd; color: white; border-radius: 7px; ")
+        # self.download_btn.setDisabled(True)
         self.dl_thread = QThread()
         self.dl_worker = DownloadWorker()
         self.dl_worker.moveToThread(self.dl_thread)
         self.dl_thread.started.connect(
-            partial(self.dl_worker.run, wf, self.data, output_ops, self.img_drop.currentText(), self.display_img,
-                    self.graph))
+            partial(self.dl_worker.run, data = self.data, output_ops = output_ops))
         self.dl_worker.finished.connect(self.on_finish_download)
         self.dl_worker.finished.connect(self.dl_thread.quit)
         self.dl_worker.finished.connect(self.dl_worker.deleteLater)
@@ -372,11 +371,18 @@ class WorkflowPage2(QWidget):
     def on_receive_data(self, output_data: DataObj):
         try:
             logging.info(
-                '%s: finished running analysis, closing thread', self.wf['name'])
+                'Finished running analysis, closing thread')
             self.data = output_data
+
+            self.progress.setValue(100)
+            # self.pg()
+            self.is_init = True
+            self.prog_animation.stop()
+            self.download(output_ops=self.output_ops)
+
             # create ui scheme
-            self.create_visuals(wf=self.wf, n_bins=(self.bars_ip.text() if self.bars_ip.text() else 'fd'),
-                                output_ops=self.output_ops)
+            # self.create_visuals(wf=self.wf, n_bins=(self.bars_ip.text() if self.bars_ip.text() else 'fd'),
+                                # output_ops=self.output_ops)
         except Exception as e:
             self.handle_except(traceback.format_exc())
 
