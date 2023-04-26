@@ -73,9 +73,9 @@ class HomePage(QWidget):
         self.csv_le = QLineEdit()
         self.csv_le.setPlaceholderText("None Selected (CSV)")
         
-        self.img_le.setText("C:/Users/Arman/Downloads/SD3 5/Synapse Meshes")
-        self.mask_le.setText("C:/Users/Arman/Downloads/SD3 5/Vesicle Meshes")
-        self.csv_le.setText("C:/Users/Arman/Downloads/SD3_5_synVesPairsFromMesh.csv")
+        # self.img_le.setText("C:/Users/AlexisA/Documents/2023-02-22_12-54-06 - Normal/Final Synapses")
+        # self.mask_le.setText("C:/Users/AlexisA/Documents/2023-02-22_12-54-06 - Normal/Final Vesicles")
+        # self.csv_le.setText("Z:/Undergrads/Arman 2022/SD3 AND NLGN MESH EXPORTS/Pairing by Mesh NND/SD3_5_synVesPairsFromMesh.csv")
         
         # add csv row
         layout.addRow(csv_btn, self.csv_le)

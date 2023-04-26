@@ -71,10 +71,10 @@ class WorkflowPage2(QWidget):
         # init layout
         layout = QFormLayout()
         # header
-        header = QLabel('header')
+        header = QLabel('Offset / Intersect Analysis')
         header.setStyleSheet("font-size: 24px; font-weight: bold; padding-top: 8px; ")
         layout.addRow(header)
-        desc = QLabel('desc')
+        desc = QLabel('Progress Page')
         desc.setStyleSheet("font-size: 17px; font-weight: 400; padding-top: 3px; padding-bottom: 20px;")
         desc.setWordWrap(True)
         layout.addRow(desc)
@@ -326,7 +326,7 @@ class WorkflowPage2(QWidget):
         self.dl_worker.moveToThread(self.dl_thread)
         self.dl_thread.started.connect(
             partial(self.dl_worker.run, data = self.data, output_ops = output_ops))
-        self.dl_worker.finished.connect(self.on_finish_download)
+        # self.dl_worker.finished.connect(self.on_finish_download)
         self.dl_worker.finished.connect(self.dl_thread.quit)
         self.dl_worker.finished.connect(self.dl_worker.deleteLater)
         self.dl_thread.finished.connect(self.dl_thread.deleteLater)
@@ -375,7 +375,7 @@ class WorkflowPage2(QWidget):
             self.data = output_data
 
             self.progress.setValue(100)
-            # self.pg()
+            self.pg(100)
             self.is_init = True
             self.prog_animation.stop()
             self.download(output_ops=self.output_ops)

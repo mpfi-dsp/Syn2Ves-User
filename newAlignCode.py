@@ -157,7 +157,7 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
     synFiles = num_sort(os.listdir(syn_path))
     vesFiles = num_sort(os.listdir(ves_path))
 
-    pairing = pairing[:5]
+    # pairing = pairing[:1]
     
     for i in range(len(pairing)):
 
@@ -452,6 +452,8 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         intersectVals.append(intersection)
         iouVals.append(iou)
         iosVals.append(ios)
+
+        # logging.info(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
 
     all_syn = [row[0] for row in pairing]
     all_ves = [row[1] for row in pairing]

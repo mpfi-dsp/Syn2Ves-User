@@ -113,7 +113,7 @@ class DownloadWorker(QObject):
             out_dir = f'{out_start}/{dl_time}'
             os.makedirs(out_dir, exist_ok=True)
             logging.info('attempting to save cleaned dfs')
-            data.final_real.to_csv(f'{out_dir}/OutputData.csv',
+            data.real_df1.to_csv(f'{out_dir}/OutputData.csv',
                                    index=False, header=True)
             # data.final_rand.to_csv(f'{out_dir}/rand_{wf["name"].lower()}_output_{enum_to_unit(output_ops.output_unit)}.csv',
             #                        index=False, header=True)

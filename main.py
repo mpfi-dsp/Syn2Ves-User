@@ -116,7 +116,7 @@ class GoldInAndOut(QWidget):
             logging.info('finished2')
             self.home_page.run_idx = 0
             self.home_page.start_btn.setText("Run Again")
-            self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 450px; color: white; border-radius: 7px; background: #E89C12")
+            self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #E89C12")
 
     def open_logger(self):
         if self.logger_shown == False:
@@ -143,7 +143,7 @@ class GoldInAndOut(QWidget):
                                    self.home_page.img_le,  self.home_page.mask_le, self.home_page.csv_le, self.home_page.output_dir_le, self.home_page.show_logs_btn]
                 for prop in self.home_props:
                     prop.setEnabled(False)
-                self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 450px; color: white; border-radius: 7px; background: #ddd")
+                self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #ddd")
                 if (self.home_page.folder_count > 1):
                     self.home_page.progress.setStyleSheet("text-align: center; border: solid grey; border-radius: 7px;color: white; background: #ff00ff; font-size: 20px;")
                 self.empty_stack()
@@ -152,30 +152,6 @@ class GoldInAndOut(QWidget):
         except Exception as e:
             print(e, traceback.format_exc())
     
-    def test(self):
-        self.home_props = [self.home_page.start_btn,
-                            self.home_page.img_le,  self.home_page.mask_le, self.home_page.csv_le, self.home_page.show_logs_btn]
-        for prop in self.home_props:
-            prop.setEnabled(False)
-
-        self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #ddd")
-        
-        self.home_page.progress.setValue(50)
-        item = QListWidgetItem(NAV_ICON, str("Test"), self.nav_list)
-        item.setSizeHint(QSize(60, 60))
-        item.setTextAlignment(Qt.AlignCenter)
-        print("Test")
-        self.page_stack.addWidget(
-                        WorkflowPage2(synFiles=self.home_page.img_le.text(),
-                                    vesFiles=self.home_page.mask_le.text(),
-                                    pairings=self.home_page.csv_le.text(),
-                                    output=self.home_page.output_dir_le.text(),
-                                    pg=self.update_main_progress,
-                                    log=self.dlg
-                                    ))
-
-        
-
     def on_loaded_data(self, loaded_data: list):
         try:
             self.COORDS = loaded_data
@@ -187,7 +163,7 @@ class GoldInAndOut(QWidget):
             o_dir: str = self.home_page.output_dir_le.text() if len(self.home_page.output_dir_le.text()) > 0 else DEFAULT_OUTPUT_DIR
             output_ops: OutputOptions = OutputOptions(output_dir=o_dir)
             
-            item = QListWidgetItem(NAV_ICON, str("Test"), self.nav_list)
+            item = QListWidgetItem(NAV_ICON, str("Analysis"), self.nav_list)
             item.setSizeHint(QSize(60, 60))
             item.setTextAlignment(Qt.AlignCenter)
             print("Test")
