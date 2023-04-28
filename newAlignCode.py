@@ -1,46 +1,43 @@
+"""
+
+
+Author: Arman Alexis
+Personal Email: therealarman@gmail.com
+Date: 4/28/2023
+
+If you have any questions about this code, feel free to contact me!
+
+
+"""
+
+
 import matplotlib.pyplot as plt
-import pyvista as pv
-from typing import List, Tuple
 import pandas as pd
 import numpy as np
-from PIL import Image, ImageEnhance, ImageOps
 import os
 import cv2
 import math
 import time
 from datetime import datetime
-from surface_area import getWhiteVals, maxmin_tuple
+from typing import List, Tuple
 import re
-from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread, QSize, QByteArray
 import logging
 
+import pyvista as pv
+from PIL import Image, ImageEnhance, ImageOps
+from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread, QSize, QByteArray
+
+
 def destroyPlot(plotter: pv.Plotter):
+    """ SAFELY DESTROY PYVISTA PLOTTER """
     plotter.close()
     plotter._theme = None
     del plotter
 
-def num_sort(sortList):
+def num_sort(sortList: List[int]):
+    """ SORTS A LIST OF INTEGERS """
     sortList.sort(key=lambda test_string : list(map(int, re.findall(r'\d+', test_string)))[0])
     return(sortList)
-
-def brightnessLines(images_arr, low, high, step, _low = [], _high = [], _step = []):
-    degree_nums = range(low, high, step)
-
-    if _low == []:
-        _low = low
-    if _high == []:
-        _high = high
-    if _step == []:
-        _step = step
-
-    for idx, x in enumerate(images_arr):
-        whites = getWhiteVals(x)
-        plt.plot(degree_nums, whites, label=str(range(_low, _high, _step)[idx]))
-        _max, _min = maxmin_tuple(degree_nums, whites)
-        plt.scatter(_max[0], _max[1])
-    plt.legend(loc="upper right")
-    plt.xticks(np.arange(-90, 135, 45))
-    plt.show()
 
 def brightnessGraph(values_arr, images_arr, start = 0.25, end = 1):
     brightArr = np.empty_like(images_arr)
@@ -52,7 +49,6 @@ def brightnessGraph(values_arr, images_arr, start = 0.25, end = 1):
         for j in range(len(images_arr[i])):
             img = images_arr[i][j]
             bright_img = Image.fromarray(img.astype('uint8'), 'RGB')
-            # bright_img = bright_img.convert('L')
             enhancer = ImageEnhance.Brightness(bright_img)
             bright_img = enhancer.enhance(norm_values[i][j])
 
@@ -64,15 +60,12 @@ def brightnessGraph(values_arr, images_arr, start = 0.25, end = 1):
 
     brightTile = concat_tile(brightArr)
 
-    # plt.imshow(brightTile)
-    # plt.show()
     return(brightTile)
 
 def concat_tile(im_list_2d):
     return cv2.vconcat([cv2.hconcat(im_list_h) for im_list_h in im_list_2d])
 
 def arccos(adj, hyp, opp, mult = 1):
-
     if(adj != 0):
         _arccos = mult * 57.2958 * np.arccos(((adj**2 + hyp**2) - opp**2) / (2 * adj * hyp))
     else:
@@ -90,6 +83,23 @@ def getTriangle(p1, center, p3):
     return(opp, adj, hyp, p3, p4)
 
 def surfaceAreaAngle(path: str, camScales: list, x_range: list, y_range: list, z_og: float = 0, y_og: float = 0, center_og: tuple = (0, 0, 0)):
+    """
+    RETURNS ROTATIONAL SURFACE AREA DATA FOR A MESH
+
+    Parameters
+    ----------
+
+    path: str
+        The file location of the mesh
+    camScales: list
+        List of camera scales
+    x_range: list
+        A range of degrees to rotate on the X axis
+    y_range: list
+        A range of degrees to rotate on the Y axis
+    
+    
+    """
     surfAreaImgs = []
     surfAreaVals = []
 
@@ -137,18 +147,16 @@ def surfaceAreaAngle(path: str, camScales: list, x_range: list, y_range: list, z
     return(surfAreaVals, surfAreaImgs)
 
 def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: pyqtSignal, outFilePath: str = ""):
+
     camVesPos_x = []
     camVesPos_y = []
     camVesPos_z = []
-
     synPos_x = []
     synPos_y = []
     synPos_z = []
-
     sfaVesPos_x = []
     sfaVesPos_y = []
     sfaVesPos_z = []
-
     vesAngle = []
     intersectVals = []
     iouVals = []
@@ -156,12 +164,9 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
 
     synFiles = num_sort(os.listdir(syn_path))
     vesFiles = num_sort(os.listdir(ves_path))
-
-    # pairing = pairing[:1]
     
     for i in range(len(pairing)):
 
-        print(i/len(pairing) * 100)
         pb.emit(int(i/len(pairing) * 100))
 
         syn = os.path.join(syn_path, synFiles[pairing[i][0]-1])
@@ -223,13 +228,10 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         p.add_mesh(synRot, color="Blue", opacity = 0.5, lighting=False)
         p.add_mesh(vesRot, color="Red", opacity = 0.5, lighting=False)
 
-        quickCamPos = p.camera.position
-
         p.camera.SetParallelProjection(True)
         p.camera_position = 'xy'
 
         synVesCamScale = p.camera.parallel_scale
-        startRot = (0, y_arccos, z_arccos)
 
         v0 = vesRot.center
         synapse_origin = synRot.center
@@ -369,7 +371,6 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         synPlot.add_mesh(synapse, show_scalar_bar=False, lighting=False)
         synImg = synPlot.screenshot()
 
-
         vesPlot.camera_position = 'xy'
         vesPlot.camera.SetParallelProjection(True)
         vesPlot.camera.focal_point = center
@@ -392,7 +393,6 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         mergedOverlay = cv2.addWeighted(syn_bw, 0.5, ves_bw, 0.5, 0)
         intersectionImg = cv2.threshold(mergedOverlay, 128, 255, cv2.THRESH_BINARY)[1]
 
-        # allious = cv2.hconcat([syn_bw, ves_bw, mergedOverlay, intersectionImg])
         '''
         fig, ax = plt.subplots(2,2)
 
@@ -417,9 +417,6 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         # # plt.savefig(f"output/Figs/IOU_{synIdx}_{vesIdx}.png")
         plt.close()
         '''
-
-        # plt.imshow(mergedOverlay, cmap = 'Greys_r')
-        # plt.show()
 
         syn_mask = np.count_nonzero( syn_bw )
         ves_mask = np.count_nonzero( ves_bw )
@@ -453,17 +450,10 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         iouVals.append(iou)
         iosVals.append(ios)
 
-        # logging.info(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
-
     all_syn = [row[0] for row in pairing]
     all_ves = [row[1] for row in pairing]
 
-    print(all_syn)
-    print(all_ves)
-
-
-
     d = {'synLabel': all_syn, 'vesLabel': all_ves, 'OG_Ves_X': camVesPos_x, 'OG_Ves_Y': camVesPos_y, 'OG_Ves_Z': camVesPos_z, 'Ves_X': sfaVesPos_x, 'Ves_Y': sfaVesPos_y, 'Ves_Z': sfaVesPos_z, 'Syn_X': synPos_x, 'Syn_Y': synPos_y, 'Syn_Z': synPos_z, 'VectorAngle': vesAngle, 'Intersect': intersectVals, 'IOU': iouVals, 'IOS': iosVals}
     df = pd.DataFrame(data=d)
-    print(df)
+
     return(df)
