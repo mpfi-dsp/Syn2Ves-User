@@ -83,23 +83,8 @@ def getTriangle(p1, center, p3):
     return(opp, adj, hyp, p3, p4)
 
 def surfaceAreaAngle(path: str, camScales: list, x_range: list, y_range: list, z_og: float = 0, y_og: float = 0, center_og: tuple = (0, 0, 0)):
-    """
-    RETURNS ROTATIONAL SURFACE AREA DATA FOR A MESH
+    """ RETURNS ROTATIONAL SURFACE AREA DATA FOR A MESH """
 
-    Parameters
-    ----------
-
-    path: str
-        The file location of the mesh
-    camScales: list
-        List of camera scales
-    x_range: list
-        A range of degrees to rotate on the X axis
-    y_range: list
-        A range of degrees to rotate on the Y axis
-    
-    
-    """
     surfAreaImgs = []
     surfAreaVals = []
 
@@ -147,7 +132,9 @@ def surfaceAreaAngle(path: str, camScales: list, x_range: list, y_range: list, z
     return(surfAreaVals, surfAreaImgs)
 
 def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: pyqtSignal, outFilePath: str = ""):
+    """ MAIN ALIGNMENT CODE"""
 
+    # Initialize some variables to store our export data
     camVesPos_x = []
     camVesPos_y = []
     camVesPos_z = []
@@ -162,13 +149,16 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
     iouVals = []
     iosVals = []
 
+    # Sort all our meshes numerically
     synFiles = num_sort(os.listdir(syn_path))
     vesFiles = num_sort(os.listdir(ves_path))
     
     for i in range(len(pairing)):
-
+        
+        # Iterate progress bar
         pb.emit(int(i/len(pairing) * 100))
 
+        # Get our current pairing
         syn = os.path.join(syn_path, synFiles[pairing[i][0]-1])
         ves = os.path.join(ves_path, vesFiles[pairing[i][1]-1])
 
@@ -186,8 +176,16 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         p1 = tuple(synapse.center)
         p2 = tuple(vesicle.center)
 
-        # ===========================================================
+        """
+        ALIGNMENT OF SYNAPSE AND VESICLE WITH X AXIS:
 
+            - Creating a midpoint between synapse and vesicle
+            - Rotate both around that midpoint to align with X axis
+            - We do this twice, for the X and Y axis, so they line up directly on both dimensions
+        
+        """
+
+        # Alignment on X axis:
         center = ((p1[0]+p2[0])/2, (p1[1]+p2[1])/2, (p1[2]+p2[2])/2)
         radius = math.sqrt(pow((p1[0] - center[0]), 2) + pow((p1[1] - center[1]), 2))
         p3 = (center[0] - radius, center[1])
@@ -202,8 +200,7 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         synRot = synapse.rotate_z(z_arccos, center, inplace=False)
         vesRot = vesicle.rotate_z(z_arccos, center, inplace=False)
 
-        # ===========================================================
-
+        # Alignment on Y axis:
         p1 = tuple(synRot.center)
         p2 = tuple(vesRot.center)
 
@@ -223,7 +220,16 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         synRot = synRot.rotate_y(y_arccos, center, inplace=False)
         vesRot = vesRot.rotate_y(y_arccos, center, inplace=False)
 
-        # ===========================================================
+        """
+        
+        STORING IMPORTANT VALUES:
+
+            - Here we are saving some important values to use later
+            - synVesCamScale: represents the parallel scale when both meshes are displayer in the plotter (we need this for projection)
+            - v0: represents the original position of our vesicle
+            - synapse_origin: represents our synapses position
+
+        """
 
         p.add_mesh(synRot, color="Blue", opacity = 0.5, lighting=False)
         p.add_mesh(vesRot, color="Red", opacity = 0.5, lighting=False)
@@ -238,8 +244,18 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
 
         destroyPlot(p)
 
-        # ===========================================================
+        """
+        
+        FINDING THE MAX CAMERA SCALE:
 
+            - When rotating our synapse, the camera scale will change automatically as the shown area of the synapse changes
+            - This is bad, because we need a consistent camera size if we want to compare all of our images
+            - In this code, we quickly iterate through all rotations, and pick the maximum camera scale used
+            - We can then assign this value as our camera scale when collecting our images to have a consistent value
+        
+        """
+
+        # Setting the range of values we plan to rotate to
         x_min, x_max, x_step = -90, 135, 45
         x_range = range(x_min, x_max, x_step)
         y_min, y_max, y_step = -90, 135, 45
@@ -247,6 +263,7 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         
         camScales = []
 
+        # Rotate to each value, store camera scale
         for i in x_range:
             for j in y_range:
                 sy_reader = pv.get_reader(syn)
@@ -268,6 +285,16 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
 
                 destroyPlot(p)
 
+        """
+        
+        SURFACE AREA ITERATIVE ROTATION:
+
+            - Here, we begin to rotate around our synapse, storing images at each specified step.
+            - We do this twice, once with large steps to get a rough estimate, and a second time with smaller steps to fine tine our value
+        
+        """
+
+        # Interation 1 of SA Rotation:
         start_time = time.time()
         surfAreaVals, surfAreaImgs = surfaceAreaAngle(syn, camScales, x_range, y_range, z_arccos, y_arccos, center)
         surfAreaVals = np.array(surfAreaVals)
@@ -278,11 +305,13 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         surface_area_y = y_range[rot_y_idx]
         print("%s seconds..." % (round(time.time() - start_time, 2)))
 
+        # Specifying new rotation steps
         x_min, x_max, x_step = surface_area_x - 45, surface_area_x + 45, 15
         x_range = range(x_min, x_max, x_step)
         y_min, y_max, y_step = surface_area_y - 45, surface_area_y + 45, 15
         y_range = range(y_min, y_max, y_step)
 
+        # Iteration 2 of SA Rotation:
         start_time = time.time()
         _surfAreaVals, _surfAreaImgs = surfaceAreaAngle(syn, camScales, x_range, y_range, z_arccos, y_arccos, center)
         _surfAreaVals = np.array(_surfAreaVals)
@@ -293,17 +322,16 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         _surface_area_y = y_range[_rot_y_idx]
         print("%s seconds..." % (round(time.time() - start_time, 2)))
 
-        # print(f"SurfX: {_surface_area_x}, SurfY: {_surface_area_y}")
+        """
+        
+        FLATTENING AND PROJECTION:
 
-        # rotArrImg = concat_tile(_surfAreaImgs)
-        # plt.imshow(rotArrImg)
-        # plt.show()
-
-        # iter1Graph = brightnessGraph(surfAreaVals, surfAreaImgs)
-        # iter2Graph = brightnessGraph(_surfAreaVals, _surfAreaImgs)
-
-        # cv2.imwrite(f"output/BrightGraphs/ITER1_{synIdx}_{vesIdx}.png", iter1Graph)
-        # cv2.imwrite(f"output/BrightGraphs/ITER2_{synIdx}_{vesIdx}.png", iter2Graph)
+            - Here we import our Synapse and Vesicle into individual plotters
+            - We rotate them with the maximum surface area value we just obtained
+            - Then we take individual images of both
+            - These can be used to calculate IOU and IOS
+        
+        """
 
         ves_reader = pv.get_reader(ves)
         vesicle = ves_reader.read()
@@ -324,46 +352,7 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         vesPlot = pv.Plotter(off_screen=True)
         synPlot = pv.Plotter(off_screen=True)
 
-        '''
-        visPlot = pv.Plotter(off_screen=False, window_size=[800,800])
-
-        visPlot.set_background('white')
-
-
-        visPlot.camera_position = 'xy'
-        visPlot.camera.SetParallelProjection(True)
-        visPlot.camera.focal_point = center
-        visPlot.camera.parallel_scale = synVesCamScale
-    
-        visPlot.add_mesh(synapse, show_scalar_bar=False, lighting=False)
-        visPlot.add_mesh(synapse, color="r", show_scalar_bar=False, lighting=True, opacity = 0.5)
-        visPlot.add_mesh(vesicle, color="b", show_scalar_bar=False, lighting=True, opacity = 0.5)
-        visPlot.add_mesh(synRot, color="r", show_scalar_bar=False, lighting=True, opacity=.2)
-        visPlot.add_mesh(vesRot, color="g", show_scalar_bar=False, lighting=True, opacity=.2)
-        
-        v_p1 = [vesRot.center[0], vesRot.center[1], vesRot.center[2]]
-        v_p2 = [vesicle.center[0], vesicle.center[1], vesicle.center[2]]
-        s_p1 = [synapse.center[0], synapse.center[1], synapse.center[2]]
-
-        vesLine = pv.Line(v_p1, v_p2)
-        synLine = pv.Line(s_p1, v_p1)
-        _synLine = pv.Line(s_p1, v_p2)
-
-        s1 = pv.Sphere(0.00000005, v_p1)
-        s2 = pv.Sphere(0.00000005, v_p2)
-
-        visPlot.add_mesh(s1)
-        visPlot.add_mesh(s2)
-
-        visPlot.add_mesh(vesLine, color="r")
-        visPlot.add_mesh(synLine, color="r")
-        visPlot.add_mesh(_synLine, color="r")
-
-        visPlot.show()
-        '''
-
-        # == Flattening ==
-
+        # Setting plotter values to be identical for both plots, then storing a screenshot
         synPlot.camera_position = 'xy'
         synPlot.camera.SetParallelProjection(True)
         synPlot.camera.focal_point = center
@@ -378,13 +367,23 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         vesPlot.add_mesh(vesicle, show_scalar_bar=False, lighting=False)
         vesImg = vesPlot.screenshot()
 
+        # Destroying Plots
         destroyPlot(synPlot)
         destroyPlot(vesPlot)
-
+        
+        # Converting screenshots to graysclae
         synapseOverlay = cv2.cvtColor(synImg, cv2.COLOR_BGR2GRAY)
         vesicleOverlay = cv2.cvtColor(vesImg, cv2.COLOR_BGR2GRAY)
 
-        # == Intersection ==
+        """
+        
+        IOU and IOS:
+
+            - Here, using the images we just processed, we calculate the intersection over union and intersection over synapse area
+            - We binarize the images, and overlay them on top of each other
+            - Then we can count how many pixels are touching (the intersection) and compare that either to the total of pixels (union) or just the pixels of our synapse (IOS)
+        
+        """
 
         thresh=76
         syn_bw = cv2.threshold(synapseOverlay, thresh, 255, cv2.THRESH_BINARY)[1]
@@ -393,41 +392,26 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         mergedOverlay = cv2.addWeighted(syn_bw, 0.5, ves_bw, 0.5, 0)
         intersectionImg = cv2.threshold(mergedOverlay, 128, 255, cv2.THRESH_BINARY)[1]
 
-        '''
-        fig, ax = plt.subplots(2,2)
-
-        ax[0,0].imshow(synapseOverlay, cmap='Greys_r')
-        ax[0,0].set_title("Synapse")
-        ax[0,0].axis('off')
-
-        ax[0,1].imshow(vesicleOverlay, cmap='Greys_r')
-        ax[0,1].set_title("Vesicle")
-        ax[0,1].axis('off')
-
-        ax[1,0].imshow(mergedOverlay, cmap='Greys_r')
-        ax[1,0].set_title("Union")
-        ax[1,0].axis('off')
-
-        ax[1,1].imshow(intersectionImg, cmap='Greys_r')
-        ax[1,1].set_title("Intersection")
-        ax[1,1].axis('off')
-
-        plt.suptitle(f"Synapse {synIdx}, Vesicle {vesIdx}")
-        plt.show()
-        # # plt.savefig(f"output/Figs/IOU_{synIdx}_{vesIdx}.png")
-        plt.close()
-        '''
-
         syn_mask = np.count_nonzero( syn_bw )
         ves_mask = np.count_nonzero( ves_bw )
         intersection = np.count_nonzero( np.logical_and( syn_bw, ves_bw ) )
         union = syn_mask + ves_mask - intersection
+
+        """
+        
+            iou: Intersection over Union
+            ios: Intersection over Synapse Area
+            v1: Rotated Vesicle Position
+            s0: Synapse Position
+
+        """
+
         iou = intersection/(union)
         ios = intersection/(syn_mask)
-
         v1 = vesicle.center
         s0 = synapse.center
-        
+
+        # Calculating vector angle from Vesicle positions
         vectorAngle = math.degrees(np.arccos(
             ((v0[0] - s0[0]) * (v1[0] - s0[0]) + (v0[1] - s0[1]) * (v1[1] - s0[1]) + (v0[2] - s0[2]) * (v1[2] - s0[2])) / 
             (((v0[0] - s0[0])**2 + (v0[1] - s0[1])**2 + (v0[2] - s0[2])**2)**0.5 * ((v1[0] - s0[0])**2 + (v1[1] - s0[1])**2 + (v1[2] - s0[2])**2)**0.5)
@@ -450,6 +434,8 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         iouVals.append(iou)
         iosVals.append(ios)
 
+    # Storing a count of all synapses and vesicles analyzed
+    
     all_syn = [row[0] for row in pairing]
     all_ves = [row[1] for row in pairing]
 

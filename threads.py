@@ -12,7 +12,8 @@ import numpy as np
 import datetime
 import pandas as pd
 import shutil
-from newAlignCode import Syn2Ves
+from workflows.meshAlignment import Syn2Ves
+from workflows.meshPairing import MakePairs
 
 class DataLoadWorker(QObject):
     finished = pyqtSignal(list)
@@ -73,8 +74,18 @@ class DownloadWorker(QObject):
             out_dir = f'{out_start}/{dl_time}'
             os.makedirs(out_dir, exist_ok=True)
             logging.info('attempting to save cleaned dfs')
-            data.real_df1.to_csv(f'{out_dir}/OutputData.csv',
-                                   index=False, header=True)
+
+            if(data.to_dl == 0):
+                data.analysis_df.to_csv(f'{out_dir}/OutputData.csv',
+                                    index=False, header=True)
+            elif(data.to_dl == 1):
+                data.pair_df1.to_csv(f'{out_dir}/candidates.csv',
+                                    index=False, header=True)
+                data.pair_df2.to_csv(f'{out_dir}/paired.csv',
+                                    index=False, header=True)
+                data.pair_df3.to_csv(f'{out_dir}/unpaired.csv',
+                                    index=False, header=True)
+
             self.finished.emit()
             logging.info("Downloaded output, closing thread")
         except Exception as e:
@@ -89,12 +100,12 @@ class RotationAnalysisWorker(QObject):
 
     def run(self, pairs: List[Tuple[int, int]], synFiles: str, vesFiles: str):
         try:
-            real_df1 = real_df2 = rand_df1 = rand_df2 = pd.DataFrame()
+            analysis_df = pair_df1 = pair_df2 = pair_df3 = pd.DataFrame()
             
             # Run Align Code
-            real_df1 = rand_df1 = Syn2Ves(synFiles, vesFiles, pairs, pb=self.progress)
+            analysis_df = Syn2Ves(synFiles, vesFiles, pairs, pb=self.progress)
 
-            self.output_data = DataObj(real_df1, real_df2, rand_df1, rand_df2)
+            self.output_data = DataObj(analysis_df, pair_df1, pair_df2, pair_df3, 0)
             self.finished.emit(self.output_data)
             logging.info('finished analysis')
         except Exception as e:
@@ -107,14 +118,14 @@ class MeshPairingWorker(QObject):
     finished = pyqtSignal(object)
     progress = pyqtSignal(int)
 
-    def run(self, synData: pd.DataFrame, vesData: pd.DataFrame, searchRad, float, synFiles: str, vesFiles: str):
+    def run(self, synData: pd.DataFrame, vesData: pd.DataFrame, searchRad: float, synFiles: str, vesFiles: str):
         try:
-            real_df1 = real_df2 = rand_df1 = rand_df2 = pd.DataFrame()
+            analysis_df = pair_df1 = pair_df2 = pair_df3 = pd.DataFrame()
             
             # Run Align Code
-            real_df1, rand_df1 = Syn2Ves(synFiles, vesFiles, pairs, pb=self.progress)
+            pair_df1, pair_df2, pair_df3 = MakePairs(synData, vesData, searchRad, synFiles, vesFiles)
 
-            self.output_data = DataObj(real_df1, real_df2, rand_df1, rand_df2)
+            self.output_data = DataObj(analysis_df, pair_df1, pair_df2, pair_df3, 1)
             self.finished.emit(self.output_data)
             logging.info('finished analysis')
         except Exception as e:

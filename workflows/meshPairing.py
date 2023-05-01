@@ -24,10 +24,6 @@ __version__ = '1.1.0'
 :execution: execute
 """
 
-# blockly xml: %3Cxml%3E%3Cvariables%3E%3Cvariable%20type%3D%22orsMultiROI%22%20id%3D%22%29.e%7ERAsd%3Bl.ym%7E-SuYge%22%3EmyMultiROI%3C/variable%3E%3Cvariable%20type%3D%22int%22%20id%3D%22y%21%3Ao3%7Cp%21B3HdamKF9lZG%22%3EaInt%3C/variable%3E%3C/variables%3E%3Cblock%20type%3D%22set_ors_variable%22%20id%3D%22@f4%3Dt08%3DW+x@Ecs%29Kimr%22%20x%3D%2226%22%20y%3D%22175%22%3E%3Cmutation%20output_type_at_creation%3D%22orsMultiROI%22%3E%3C/mutation%3E%3Cfield%20name%3D%22VAR%22%20id%3D%22%29.e%7ERAsd%3Bl.ym%7E-SuYge%22%20variabletype%3D%22orsMultiROI%22%3EmyMultiROI%3C/field%3E%3Cfield%20name%3D%22type%22%3EorsMultiROI%3C/field%3E%3Cvalue%20name%3D%22NAME%22%3E%3Cblock%20type%3D%22ors_lists_getIndex%22%20id%3D%22C4hB*GH%5DZECAr3%60%3FxLh/%22%3E%3Cmutation%20statement%3D%22false%22%20at%3D%22false%22%3E%3C/mutation%3E%3Cfield%20name%3D%22MODE%22%3EGET%3C/field%3E%3Cfield%20name%3D%22WHERE%22%3EFIRST%3C/field%3E%3Cvalue%20name%3D%22VALUE%22%3E%3Cblock%20type%3D%22working_context_selected%22%20id%3D%22D0%3DR%28E%7C%21TGw%5BJG6KVGn%7B%22%3E%3Cmutation%20type%3D%22list_of_orsMultiROI%22%3E%3C/mutation%3E%3Cfield%20name%3D%22type%22%3EMultiROI%3C/field%3E%3C/block%3E%3C/value%3E%3C/block%3E%3C/value%3E%3Cnext%3E%3Cblock%20type%3D%22select_all_mr_labels%22%20id%3D%22%28t45udukB7BSSZuP_JMN%22%3E%3Cvalue%20name%3D%22MR%22%3E%3Cblock%20type%3D%22variables_get_orsVar%22%20id%3D%22JA+-%29KQ4%25%242%5D0h@DhCXW%22%3E%3Cmutation%20output_type_at_creation%3D%22orsMultiROI%22%3E%3C/mutation%3E%3Cfield%20name%3D%22VAR%22%20id%3D%22%29.e%7ERAsd%3Bl.ym%7E-SuYge%22%20variabletype%3D%22orsMultiROI%22%3EmyMultiROI%3C/field%3E%3Cfield%20name%3D%22type%22%3EorsMultiROI%3C/field%3E%3C/block%3E%3C/value%3E%3Cnext%3E%3Cblock%20type%3D%22set_ors_variable%22%20id%3D%22aovQj6umM2@-W%7BIF6UX%3A%22%3E%3Cmutation%20output_type_at_creation%3D%22int%22%3E%3C/mutation%3E%3Cfield%20name%3D%22VAR%22%20id%3D%22y%21%3Ao3%7Cp%21B3HdamKF9lZG%22%20variabletype%3D%22int%22%3EaInt%3C/field%3E%3Cfield%20name%3D%22type%22%3Eint%3C/field%3E%3Cvalue%20name%3D%22NAME%22%3E%3Cblock%20type%3D%22orsmodel_method%22%20id%3D%22-%60Hgy%28tFbwG_j*V%24ee%25t%22%20inline%3D%22false%22%3E%3Cmutation%20class%3D%22orsMultiROI%22%20method%3D%22getLabelCount%22%3E%3C/mutation%3E%3Cvalue%20name%3D%22GUID%22%3E%3Cblock%20type%3D%22variables_get_orsVar%22%20id%3D%22JT%28*i/bSuEeKgtE%3AthoT%22%3E%3Cmutation%20output_type_at_creation%3D%22orsMultiROI%22%3E%3C/mutation%3E%3Cfield%20name%3D%22VAR%22%20id%3D%22%29.e%7ERAsd%3Bl.ym%7E-SuYge%22%20variabletype%3D%22orsMultiROI%22%3EmyMultiROI%3C/field%3E%3Cfield%20name%3D%22type%22%3EorsMultiROI%3C/field%3E%3C/block%3E%3C/value%3E%3Cvalue%20name%3D%22method%22%3E%3Cblock%20type%3D%22orsmodel_method_selector%22%20id%3D%22De%5DnkZ%7Dx%23S%24%2C_*M_AP%7Cm%22%3E%3Cfield%20name%3D%22method%22%3EgetLabelCount%3C/field%3E%3C/block%3E%3C/value%3E%3C/block%3E%3C/value%3E%3Cnext%3E%3Cblock%20type%3D%22message_prompt%22%20id%3D%22%251%3F/l2UZn3%21oh.73%5D%3DPJ%22%3E%3Cvalue%20name%3D%22TITLE%22%3E%3Cblock%20type%3D%22text%22%20id%3D%22q*k.Qq5%21o9j%3D79u%28XvkF%22%3E%3Cfield%20name%3D%22TEXT%22%3E%3C/field%3E%3C/block%3E%3C/value%3E%3Cvalue%20name%3D%22CAPTION%22%3E%3Cblock%20type%3D%22text%22%20id%3D%22VPx%5DXzPG%3BM_%5Bk7%7B%5D%5BTe1%22%3E%3Cfield%20name%3D%22TEXT%22%3E%3C/field%3E%3C/block%3E%3C/value%3E%3Cvalue%20name%3D%22INPUT%22%3E%3Cblock%20type%3D%22variables_get_orsVar%22%20id%3D%22%3Fg%3DDZv%25%7E%60dI4%7CdC9%28qIN%22%3E%3Cmutation%20output_type_at_creation%3D%22int%22%3E%3C/mutation%3E%3Cfield%20name%3D%22VAR%22%20id%3D%22y%21%3Ao3%7Cp%21B3HdamKF9lZG%22%20variabletype%3D%22int%22%3EaInt%3C/field%3E%3Cfield%20name%3D%22type%22%3Eint%3C/field%3E%3C/block%3E%3C/value%3E%3C/block%3E%3C/next%3E%3C/block%3E%3C/next%3E%3C/block%3E%3C/next%3E%3C/block%3E%3Cblock%20type%3D%22ors_interface_method%22%20id%3D%22%3D8f%3FO3cidtT%2C%21LJp@/aY%22%20inline%3D%22false%22%20disabled%3D%22true%22%20x%3D%2295%22%20y%3D%22452%22%3E%3Cmutation%20module%3D%22OrsHelpers.multiroilabelhelper%22%20method%3D%22MultiROILabelHelper.extractSelectedLabelsToROIs%22%3E%3C/mutation%3E%3Cvalue%20name%3D%22module%22%3E%3Cblock%20type%3D%22ors_interface_module_selector%22%20id%3D%22%29Z%3DGN.Xm9ljh%60H5J@dPo%22%3E%3Cfield%20name%3D%22module%22%3EOrsHelpers.multiroilabelhelper%3C/field%3E%3C/block%3E%3C/value%3E%3Cvalue%20name%3D%22method%22%3E%3Cblock%20type%3D%22ors_interface_method_selector%22%20id%3D%22k%5E2GKeJYIr%5BP*7sWI%25PN%22%3E%3Cfield%20name%3D%22method%22%3EMultiROILabelHelper.extractSelectedLabelsToROIs%3C/field%3E%3C/block%3E%3C/value%3E%3Cvalue%20name%3D%22multiroi%22%3E%3Cshadow%20type%3D%22PyNone%22%20id%3D%22wQhnJ%7E%29*W27*b%7E4%5Dm%5EU2%22%3E%3C/shadow%3E%3Cblock%20type%3D%22variables_get_orsVar%22%20id%3D%22%5BW%2CScMO%5Di%3DtI%7Bq%23%247Arl%22%3E%3Cmutation%20output_type_at_creation%3D%22orsMultiROI%22%3E%3C/mutation%3E%3Cfield%20name%3D%22VAR%22%20id%3D%22%29.e%7ERAsd%3Bl.ym%7E-SuYge%22%20variabletype%3D%22orsMultiROI%22%3EmyMultiROI%3C/field%3E%3Cfield%20name%3D%22type%22%3EorsMultiROI%3C/field%3E%3C/block%3E%3C/value%3E%3Cvalue%20name%3D%22tIndex%22%3E%3Cblock%20type%3D%22value_chooser%22%20id%3D%22%29-%21%5B9_xp7Et/+vzj%5D228%22%3E%3Cfield%20name%3D%22TYPE%22%3EInteger%3A%3C/field%3E%3Cfield%20name%3D%22VALUE%22%3ESelect%20T%20Index%3C/field%3E%3Cfield%20name%3D%22DEFAULT%22%3E1%3C/field%3E%3C/block%3E%3C/value%3E%3C/block%3E%3C/xml%3E
-
-##### START OF BLOCKLY DEFINITIONS #####
-
 ### Import
 
 # Science Stack
@@ -42,45 +38,17 @@ from PyQt5.QtWidgets import QFileDialog
 import os
 import time
 
-### Definitions
-
-def show_msgbox(message, caption, title):
-        message = str(caption) + str(message)
-        OrsTMessageBox.message(None, message, str(title), OrsTMessageBox.Information, OrsTMessageBox.Ok)
-
-##### END OF BLOCKLY DEFINITIONS #####
 
 start_time = time.time()
 
 ### User input
 
-# Get directory for folders containing meshes
-
-# synMeshDir = os.path.join(QFileDialog.getExistingDirectory(WorkingContext.getCurrentContextWindow(), caption="Select the Folder with Synapse Meshes", options=QFileDialog.ShowDirsOnly), '').replace("\\","/")
-# vesMeshDir = os.path.join(QFileDialog.getExistingDirectory(WorkingContext.getCurrentContextWindow(), caption="Select the Folder with Vesicle Meshes", options=QFileDialog.ShowDirsOnly), '').replace("\\","/")
-
-# Get the data for synapses and vesicle clouds
-
-# synComFile = str(QFileDialog.getOpenFileName(WorkingContext.getCurrentContextWindow(), 'Open CSV with Synapse Data', 'c:\\')[0])
-# vesComFile = str(QFileDialog.getOpenFileName(WorkingContext.getCurrentContextWindow(), 'Open CSV with Vesicle Data', 'c:\\')[0])
-
-# Get directory for the folder that will contain macro outputs
-
-# synVesPairsDir = os.path.join(QFileDialog.getExistingDirectory(WorkingContext.getCurrentContextWindow(), caption="Select Folder for List of Pairs", options=QFileDialog.ShowDirsOnly), '').replace("\\","/")
-
-# Get the half-height of a cube centered around the CoM of a synapse. 
-# Vesicles with CoMs inside this cube will be loaded as meshes to check for the distance between their surface and the synapse's surface
-
-searchVolRad = float(SimpleEntryDialog.prompt(None, "Specify the search radius from a synapses' center of mass. The macro will only pair a vesicle cloud with a synapse if its center of mass falls within the cubic volume with this radius."))
-
-def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, synMeshDir: str, vesMeshDir: str):   
-    ### CoM Pairing
-
+def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, synMeshDir: str, vesMeshDir: str):
     candidatePairs = pd.DataFrame({'synLabel': [], 'synX': [], 'synY': [], 'synZ': [], 'vesLabel':[], 'vesX': [], 'vesY': [], 'vesZ': [], 'comDist': []})
 
     # Load the coordinates for each synapse
 
-    for synLabel in synCom.index:    
+    for synLabel in synCom.index:      
         synX = float(synCom.loc[synLabel,'comX'])
         synY = float(synCom.loc[synLabel,'comY'])
         synZ = float(synCom.loc[synLabel,'comZ'])
@@ -98,9 +66,9 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
             if ((vesX >= (synX - searchVolRad)) and (vesX <= (synX + searchVolRad))) and ((vesY >= (synY - searchVolRad)) and (vesY <= (synY + searchVolRad))) and ((vesZ >= (synZ - searchVolRad)) and (vesZ <= (synZ + searchVolRad))):
                 
                 comDist = np.sqrt((synX - vesX)**2 + (synY - vesY)**2 + (synZ - vesZ)**2)
-                
+
                 newRow = {'synLabel': synLabel, 'synX': synX, 'synY': synY, 'synZ': synZ, 'vesLabel': vesLabel, 'vesX': vesX, 'vesY': vesY, 'vesZ': vesZ, 'comDist': comDist}
-                
+
                 candidatePairs = candidatePairs.append(newRow, ignore_index = True)
 
     # Convert labels to integers
@@ -239,23 +207,22 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
 
     unpairedVes = pd.DataFrame({'label': [], 'comX': [], 'comY': [], 'comZ': [], 'SA': [], 'vol': [], 'sphericity': [], 'maxFeret': [], 'minFeret': [], 'aspectRatio': []})
 
-    for label in vesCom['labels']: 
+    vesComList = vesCom.index.tolist()
+    vesLabelList = synVesPairs.vesLabel.tolist()
 
-        if label in synVesPairs.vesLabel:
-        
-            continue
-    
-        else: 
+    for label in vesComList: 
+
+        if label not in vesLabelList: 
 
             comX = vesCom.loc[label, 'comX']
-            comY = vesCom.loc[label, 'SA']
-            comZ = vesCom.loc[label, 'SA']
+            comY = vesCom.loc[label, 'comY']
+            comZ = vesCom.loc[label, 'comZ']
             SA = vesCom.loc[label, 'SA']
             vol = vesCom.loc[label, 'vol']
             sphere = vesCom.loc[label, 'sphericity']
-            maxFeret = vesCom.loc[vesLabel, 'maxFeret']
-            minFeret = vesCom.loc[vesLabel, 'minFeret']
-            aspectRatio = vesCom.loc[vesLabel, 'aspectRatio']
+            maxFeret = vesCom.loc[label, 'maxFeretLength']
+            minFeret = vesCom.loc[label, 'minFeretLength']
+            aspectRatio = vesCom.loc[label, 'aspectRatio']
 
             newRow = {'label': label, 'comX': comX, 'comY': comY, 'comZ': comZ, 'SA': SA, 'vol': vol, 'sphericity': sphere, 'maxFeret': maxFeret, 'minFeret': minFeret, 'aspectRatio': aspectRatio}
 
@@ -263,10 +230,11 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
         
     # unpairedVesDir = synVesPairsDir + 'unpairedVes.csv'
     # unpairedVes.to_csv(unpairedVesDir, encoding = 'utf-8-sig', index = False) 
-
     # Save runtime
 
     # with open(f'{synVesPairsDir}/pairingRuntime.txt', 'w') as f:
         # f.write(str(time.time() - start_time))
+
+    return(candidatePairs, synVesPairs, unpairedVes)
 
     # ********** END MACRO ********** #

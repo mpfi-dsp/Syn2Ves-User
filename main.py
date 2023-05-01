@@ -138,10 +138,10 @@ class GoldInAndOut(QWidget):
     def init_workflows(self):
         try:
             """ INITIALIZE CHILD WORKFLOW WINDOWS """
-            if len(self.home_page.synMesh_le.text()) > 0 and len(self.home_page.csv_le.text()) > 0:
+            if len(self.home_page.synMesh_le.text()) > 0 and len(self.home_page.vesMesh_le.text()) > 0 and len(self.home_page.csv_le.text()) > 0:
                 # gui elements to disable when running
-                self.home_props = [self.home_page.start_btn,
-                                   self.home_page.synMesh_le,  self.home_page.vesMesh_le, self.home_page.csv_le, self.home_page.output_dir_le, self.home_page.show_logs_btn]
+                self.home_props = [self.home_page.start_btn, self.home_page.pair_btn,
+                                   self.home_page.synMesh_le,  self.home_page.vesMesh_le, self.home_page.csv_le, self.home_page.synCsv_le, self.home_page.vesCsv_le, self.home_page.comRad_le, self.home_page.output_dir_le, self.home_page.show_logs_btn]
                 for prop in self.home_props:
                     prop.setEnabled(False)
                 self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #ddd")
@@ -156,13 +156,13 @@ class GoldInAndOut(QWidget):
     def init_pairing(self):
         try:
             """ INITIALIZE CHILD WORKFLOW WINDOWS """
-            if len(self.home_page.synMesh_le.text()) > 0 and len(self.home_page.csv_le.text()) > 0:
+            if len(self.home_page.synMesh_le.text()) > 0 and len(self.home_page.vesMesh_le.text()) > 0 and len(self.home_page.synCsv_le.text()) > 0 and len(self.home_page.vesCsv_le.text()) > 0 and len(self.home_page.comRad_le.text()) > 0:
                 # gui elements to disable when running
-                self.home_props = [self.home_page.start_btn,
-                                   self.home_page.synMesh_le,  self.home_page.vesMesh_le, self.home_page.csv_le, self.home_page.output_dir_le, self.home_page.show_logs_btn]
+                self.home_props = [self.home_page.start_btn, self.home_page.pair_btn,
+                                   self.home_page.synMesh_le,  self.home_page.vesMesh_le, self.home_page.csv_le, self.home_page.synCsv_le, self.home_page.vesCsv_le, self.home_page.comRad_le, self.home_page.output_dir_le, self.home_page.show_logs_btn]
                 for prop in self.home_props:
                     prop.setEnabled(False)
-                self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #ddd")
+                self.home_page.pair_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #ddd")
                 if (self.home_page.folder_count > 1):
                     self.home_page.progress.setStyleSheet("text-align: center; border: solid grey; border-radius: 7px;color: white; background: #ff00ff; font-size: 20px;")
                 self.empty_stack()

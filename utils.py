@@ -17,7 +17,6 @@ class Progress(QThread):
     def update_progress(self, count):
         self.prog.emit(count)
 
-
 def create_color_pal(n_bins: int = 10, palette_type: str ="mako") -> List[Tuple[int, int, int]]:
     """ GENERATE COLOR PALETTE USING SEABORN """
     palette = sns.color_palette(palette_type, n_colors=n_bins)
@@ -85,17 +84,6 @@ def pixels_conversion(data: pd.DataFrame, unit: Unit = Unit.PIXEL, scalar: float
     return df
 
 
-def pixels_conversion_w_distance(data, scalar=1):
-    """ CONVERT DF FROM ONE METRIC UNIT TO ANOTHER INCLUDING DISTANCE """
-    scaled_data = data.copy()
-    if scalar > 1:
-        for idx, entry in scaled_data.iterrows():
-            scaled_data.at[idx, 'og_coord'] = tuple(int(x / scalar) for x in entry['og_coord'])
-            scaled_data.at[idx, 'closest_coord'] = tuple(int(x / scalar) for x in entry['closest_coord'])
-            scaled_data.at[idx, 'dist'] = float(entry['dist'] / scalar)
-    return scaled_data
-
-
 def unit_to_enum(val):
     """ TURN UNIT STRING INTO ENUM """
     if val == 'px':
@@ -145,41 +133,3 @@ def to_df(coords: List[Tuple[float, float]]) -> pd.DataFrame:
         y_coords.append(coord[0])
     df = pd.DataFrame(data={'X': x_coords, 'Y': y_coords})
     return df
-
-def avg_vals(val, df: pd.DataFrame) -> pd.DataFrame:
-    try:
-        if val == Workflow.NND:
-            real_avg = df['dist'].mean()
-            df['avg_dist'] = 0
-            df.at[0, 'avg_dist'] = real_avg
-
-        if val == Workflow.CLUST:
-            clustCounts = df['cluster_id'].value_counts()
-            clustCountsNo1 = clustCounts[clustCounts > 1]
-            real_avg = clustCounts.mean()
-            No1_avg = clustCountsNo1.mean()
-
-            df['avg'] = 0
-            df.at[0, 'avg'] = real_avg
-            # TODO: triggering error in multi file 
-            df['avg_no_1s'] = 0
-            df.at[0, 'avg_no_1s'] = No1_avg
-
-        if val == Workflow.SEPARATION:
-            real_avg = df['dist'].mean()
-            df['avg_dist'] = 0
-            df.at[0, 'avg_dist'] = real_avg
-    except Exception as e:
-        print(e, traceback.format_exc())
-        
-    return(df)
-    
-
-# """ TURN ENUM INTO WORKFLOW NAME """
-# def enum_to_workflow(val):
-#     if val == Workflow.NND:
-#         return "nnd"
-#     elif val == Workflow.CLUST:
-#         return "clust"
-#     else:
-#         return 'undefined'
