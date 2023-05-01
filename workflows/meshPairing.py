@@ -44,11 +44,13 @@ start_time = time.time()
 ### User input
 
 def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, synMeshDir: str, vesMeshDir: str):
+    print("1")
     candidatePairs = pd.DataFrame({'synLabel': [], 'synX': [], 'synY': [], 'synZ': [], 'vesLabel':[], 'vesX': [], 'vesY': [], 'vesZ': [], 'comDist': []})
 
     # Load the coordinates for each synapse
 
-    for synLabel in synCom.index:      
+    for synLabel in synCom.index:
+        print("2")      
         synX = float(synCom.loc[synLabel,'comX'])
         synY = float(synCom.loc[synLabel,'comY'])
         synZ = float(synCom.loc[synLabel,'comZ'])
@@ -56,7 +58,7 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
         # Load the coordinates for each vesicle cloud  
 
         for vesLabel in vesCom.index:
-
+            print("3")
             vesX = float(vesCom.loc[vesLabel, 'comX'])
             vesY = float(vesCom.loc[vesLabel, 'comY'])
             vesZ = float(vesCom.loc[vesLabel, 'comZ'])
@@ -64,7 +66,7 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
             # If the vesicle cloud has a CoM within the search radius of the synapse, calculate the distance between them and add a row the dataframe of candidate pairs
 
             if ((vesX >= (synX - searchVolRad)) and (vesX <= (synX + searchVolRad))) and ((vesY >= (synY - searchVolRad)) and (vesY <= (synY + searchVolRad))) and ((vesZ >= (synZ - searchVolRad)) and (vesZ <= (synZ + searchVolRad))):
-                
+                print("4")
                 comDist = np.sqrt((synX - vesX)**2 + (synY - vesY)**2 + (synZ - vesZ)**2)
 
                 newRow = {'synLabel': synLabel, 'synX': synX, 'synY': synY, 'synZ': synZ, 'vesLabel': vesLabel, 'vesX': vesX, 'vesY': vesY, 'vesZ': vesZ, 'comDist': comDist}

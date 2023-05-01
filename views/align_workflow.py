@@ -25,7 +25,7 @@ from views.logger import Logger
 from globals import PALETTE_OPS, PROG_COLOR_1, PROG_COLOR_2, REAL_COLOR, RAND_COLOR
 from typings import Unit, Workflow, DataObj, OutputOptions, WorkflowObj
 from typing import List, Tuple
-from utils import Progress, create_color_pal, enum_to_unit, to_pair_list, pixels_conversion, avg_vals
+from utils import Progress, create_color_pal, enum_to_unit, to_pair_list, pixels_conversion
 from threads import RotationAnalysisWorker, DownloadWorker
 
 class AlignWorkflowPage(QWidget):
