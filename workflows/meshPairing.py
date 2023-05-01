@@ -211,7 +211,8 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
     for label in uniqueSynLabels: 
     
         tempDF = meshNND_candidates[meshNND_candidates['synLabel'] == label]
-        synVesPairs = synVesPairs.append(tempDF[tempDF.meshNND == tempDF.meshNND.min()])
+        newDf = pd.DataFrame(tempDF[tempDF.meshNND == tempDF.meshNND.min()])
+        synVesPairs = pd.concat([synVesPairs, newDf], ignore_index=True)
 
     # Convert labels to integers
 
