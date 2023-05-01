@@ -1,32 +1,36 @@
-# Syn2Ves Program Documentation
+# Syn2Ves Program Documentation 🧠🔍📊
 
-**Syn2Ves** is a program designed to pair synapses with vesicles based on their alignment and center of mass data.
+## Introduction
+
+Welcome to the Syn2Ves Program Documentation! 🎉
+
+**Syn2Ves** is a program designed to pair synapses with vesicles based on position, and quanitfy the alignment of these pairings.
 
 The program takes the following inputs:
 
-## Alignment Inputs
+## Alignment Inputs 📂
 
-### Synapse Folder
+### Synapse Folder 🧠
 A folder containing STL files of synapses, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
 
-### Vesicle Folder
+### Vesicle Folder 🧠
 A folder containing STL files of vesicles, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
 
-### Pairing CSV
+### Pairing CSV 🧩
 A CSV file containing the pairing information of the synapses and vesicles. The file must be formatted with the following column names: `synLabel` and `vesLabel`. These columns should contain numerical labels for each synapse and vesicle, respectively. 
 
-## Mesh Pairing Inputs
+## Mesh Pairing Inputs 📂
 
-### Synapse CSV
+### Synapse CSV 🔬
 A CSV file containing center of mass data for the synapses. The file must be formatted with the following column names: `labels`, `comX`, `comY`, `comZ`, `vol`, `SA`, `halfSA`, `sphericity`, `maxFeretLength`, `minFeretLength`, `aspectRatio`. These columns should contain numerical labels for each synapse, followed by its center of mass coordinates (x, y, z), volume, surface area, half surface area, sphericity, maximum Feret length, minimum Feret length, and aspect ratio, respectively. 
 
-### Vesicle CSV
+### Vesicle CSV 🔬
 Same as Synapse CSV but for Vesicles.
 
-### COM Search Radius
+### COM Search Radius 🔍
 The search radius from a synapses' center of mass. The program will only pair a vesicle cloud with a synapse if its center of mass falls within the cubic volume with this radius.
 
-## Installation
+## Installation 🚀
 
 To run the program, clone this repository and execute the following commands:
 
@@ -39,7 +43,7 @@ python -u main.py
 ```
 
 
-## Output
+## Output 📊
 
 The program has two different functionalities, each outputting a different set of files.
 
