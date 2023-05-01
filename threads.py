@@ -29,6 +29,29 @@ class DataLoadWorker(QObject):
             logging.error(traceback.format_exc())
             self.finished.emit([])
 
+class PairDataLoadWorker(QObject):
+    finished = pyqtSignal(list)
+
+    def run(self, csv1_path: str = "", csv2_path: str = ""):
+        print(csv1_path)
+        print(csv2_path)
+        try:
+            SYN_DATA = pd.read_csv(csv1_path)
+            # SYN_DATA = pd.read_csv(csv1_path, index_col = 'labels')
+            VES_DATA = pd.read_csv(csv2_path)
+            # VES_DATA = pd.read_csv(csv2_path, index_col = 'labels')
+
+            print(SYN_DATA)
+
+            self.finished.emit([SYN_DATA, VES_DATA])
+            logging.info("Finished loading in and converting data")
+        except Exception as e:
+            print("test2")
+            self.dlg = Logger()
+            self.dlg.show()
+            logging.error(traceback.format_exc())
+            self.finished.emit([])
+
 class DownloadWorker(QObject):
     finished = pyqtSignal()
 
@@ -70,6 +93,26 @@ class RotationAnalysisWorker(QObject):
             
             # Run Align Code
             real_df1 = rand_df1 = Syn2Ves(synFiles, vesFiles, pairs, pb=self.progress)
+
+            self.output_data = DataObj(real_df1, real_df2, rand_df1, rand_df2)
+            self.finished.emit(self.output_data)
+            logging.info('finished analysis')
+        except Exception as e:
+            self.dlg = Logger()
+            self.dlg.show()
+            logging.error(traceback.format_exc())
+            self.finished.emit({})
+            
+class MeshPairingWorker(QObject):
+    finished = pyqtSignal(object)
+    progress = pyqtSignal(int)
+
+    def run(self, synData: pd.DataFrame, vesData: pd.DataFrame, searchRad, float, synFiles: str, vesFiles: str):
+        try:
+            real_df1 = real_df2 = rand_df1 = rand_df2 = pd.DataFrame()
+            
+            # Run Align Code
+            real_df1, rand_df1 = Syn2Ves(synFiles, vesFiles, pairs, pb=self.progress)
 
             self.output_data = DataObj(real_df1, real_df2, rand_df1, rand_df2)
             self.finished.emit(self.output_data)

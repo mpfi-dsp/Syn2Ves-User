@@ -26,7 +26,7 @@ from globals import PALETTE_OPS, PROG_COLOR_1, PROG_COLOR_2, REAL_COLOR, RAND_CO
 from typings import Unit, Workflow, DataObj, OutputOptions, WorkflowObj
 from typing import List, Tuple
 from utils import Progress, create_color_pal, enum_to_unit, to_pair_list, pixels_conversion, avg_vals
-from threads import RotationAnalysisWorker, DownloadWorker
+from threads import RotationAnalysisWorker, DownloadWorker, MeshPairingWorker
 
 class PairWorkflowPage(QWidget):
     """
@@ -53,7 +53,7 @@ class PairWorkflowPage(QWidget):
     @pg: primary loading/progress bar ref
     """
 
-    def __init__(self, pairs: List[Tuple[int, int]], synFiles: List[str], vesFiles: List[str], pairings: pd.DataFrame, output: str, output_ops: OutputOptions = None,
+    def __init__(self, synData: pd.DataFrame, vesData: pd.DataFrame, searchRad: float, synFiles: List[str], vesFiles: List[str], pairings: pd.DataFrame, output: str, output_ops: OutputOptions = None,
                  pg: Progress = None, log: Logger = None):
         super().__init__()
         # init class vars: allow referencing within functions without passing explicitly
@@ -65,8 +65,6 @@ class PairWorkflowPage(QWidget):
         self.vesFiles = vesFiles
         self.pairings = pairings
         self.output = output
-
-        print(pairs[0])
 
         # init layout
         layout = QFormLayout()
@@ -279,7 +277,7 @@ class PairWorkflowPage(QWidget):
         # props to enable and disable when running wf
         self.wf_props = [self.run_btn, self.image_frame, self.graph_frame, self.gen_rand_cb, self.gen_real_cb]
         '''# run on init
-        self.run(pairs, synFiles, vesFiles)
+        self.run(synData, vesData, searchRad, synFiles, vesFiles)
 
     def update_progress(self, value: int):
         """ UPDATE PROGRESS BAR """
@@ -337,7 +335,7 @@ class PairWorkflowPage(QWidget):
             "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 3px; background: #007267; color: white; border-radius: 7px; ")
         self.download_btn.setDisabled(False)
 
-    def run(self, pairs: List[Tuple[float, float]], synFiles: str, vesFiles: str):
+    def run(self, synData: pd.DataFrame, vesData: pd.DataFrame, searchRad: float, synFiles: str, vesFiles: str):
         """ RUN WORKFLOW """
         try:
             prog_wrapper = Progress()
@@ -348,17 +346,18 @@ class PairWorkflowPage(QWidget):
                 # prop.setEnabled(False)
 
             # set coords
-            self.pairs = pairs
+            self.SYN_DATA = synData
+            self.VES_DATA = vesData
 
             # obtain custom props
             # vals = self.get_custom_values()
-            logging.info('Running offset analysis, opening thread')
+            logging.info('Running mesh pairing, opening thread')
             # generate thread
             self.thread = QThread()
-            self.worker = RotationAnalysisWorker()
+            self.worker = MeshPairingWorker()
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(
-                partial(self.worker.run, pairs, synFiles, vesFiles))
+                partial(self.worker.run, self.SYN_DATA, self.VES_DATA, searchRad, synFiles, vesFiles))
             self.worker.progress.connect(self.update_progress)
             self.worker.finished.connect(self.on_receive_data)
             self.worker.finished.connect(self.thread.quit)

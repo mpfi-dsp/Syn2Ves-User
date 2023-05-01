@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import (QWidget, QListWidget, QStackedWidget, QHBoxLayout, 
                              QMainWindow)
 import pandas._libs.tslibs.base
 # general
-from threads import DataLoadWorker
+from threads import DataLoadWorker, PairDataLoadWorker
 from functools import partial
 import numexpr
 import pathlib
@@ -105,8 +105,8 @@ class GoldInAndOut(QWidget):
                 logging.info("Skipping folder %s because it is missing critical files", str(self.home_page.run_idx+1))
             logging.info("Running folder %s of %s", str(self.home_page.run_idx+1), str(self.home_page.folder_count))
             self.home_page.start_btn.setText(f'Folder {str(self.home_page.run_idx+1)} of {str(self.home_page.folder_count)}')
-            self.home_page.img_le.setText(self.home_page.multi_folders[self.home_page.run_idx]['image'][0]) 
-            self.home_page.mask_le.setText(self.home_page.multi_folders[self.home_page.run_idx]['mask'][0]) 
+            self.home_page.synMesh_le.setText(self.home_page.multi_folders[self.home_page.run_idx]['image'][0]) 
+            self.home_page.vesMesh_le.setText(self.home_page.multi_folders[self.home_page.run_idx]['mask'][0]) 
             self.home_page.csv_le.setText(self.home_page.multi_folders[self.home_page.run_idx]['csv'][0]) 
             self.home_page.csv2_le.setText(self.home_page.multi_folders[self.home_page.run_idx]['csv2'][0]) 
             if (len(self.home_page.multi_folders[self.home_page.run_idx]['scalar']) > 0):
@@ -201,7 +201,9 @@ class GoldInAndOut(QWidget):
 
     def on_loaded_pairing_data(self, loaded_data: list):
         try:
-            self.COORDS = loaded_data
+            self.SYN_DATA = loaded_data[0]
+            self.VES_DATA = loaded_data[1]
+
             # file paths
             img_path: str = self.home_page.synMesh_le.text() 
             mask_path: str = self.home_page.vesMesh_le.text() 
@@ -214,7 +216,7 @@ class GoldInAndOut(QWidget):
             item.setSizeHint(QSize(60, 60))
             item.setTextAlignment(Qt.AlignCenter)
             self.page_stack.addWidget(
-                            AlignWorkflowPage(pairs = self.COORDS,
+                            PairWorkflowPage(synData=self.SYN_DATA, vesData=self.VES_DATA, searchRad=self.home_page.comRad_le.text(),
                                         synFiles=self.home_page.synMesh_le.text(),
                                         vesFiles=self.home_page.vesMesh_le.text(),
                                         pairings=self.home_page.csv_le.text(),
@@ -250,12 +252,13 @@ class GoldInAndOut(QWidget):
         try:
             # edit in production
             logging.info("Loading data...")
-            csv_path: str = self.home_page.csv_le.text()
+            csv1_path: str = self.home_page.synCsv_le.text()
+            csv2_path: str = self.home_page.vesCsv_le.text()
             # load in data in thread
             self.load_thread = QThread()
-            self.load_worker = DataLoadWorker()
+            self.load_worker = PairDataLoadWorker()
             self.load_worker.moveToThread(self.load_thread)
-            self.load_thread.started.connect(partial(self.load_worker.run, csv_path))
+            self.load_thread.started.connect(partial(self.load_worker.run, csv1_path, csv2_path))
             self.load_worker.finished.connect(self.on_loaded_pairing_data)
             self.load_worker.finished.connect(self.load_thread.quit)
             self.load_worker.finished.connect(self.load_worker.deleteLater)
