@@ -25,19 +25,10 @@ from views.logger import Logger
 from globals import PALETTE_OPS, PROG_COLOR_1, PROG_COLOR_2, REAL_COLOR, RAND_COLOR
 from typings import Unit, Workflow, DataObj, OutputOptions, WorkflowObj
 from typing import List, Tuple
-from utils import Progress, create_color_pal, enum_to_unit, to_coord_list, pixels_conversion, avg_vals
-from threads import AnalysisWorker, DownloadWorker
-from workflows.random_coords import gen_random_coordinates
-from workflows.clust import draw_clust
-from workflows.gold_rippler import draw_rippler
-from workflows.separation import draw_separation
-from workflows.goldstar import draw_goldstar
-from workflows.goldAstar import draw_goldAstar
-# from workflows.astar import draw_astar
-from workflows.nnd import draw_length
+from utils import Progress, create_color_pal, enum_to_unit, to_pair_list, pixels_conversion, avg_vals
+from threads import RotationAnalysisWorker, DownloadWorker
 
-
-class WorkflowPage(QWidget):
+class PairWorkflowPage(QWidget):
     """
     WORKFLOW PAGE
     __________________
@@ -62,40 +53,46 @@ class WorkflowPage(QWidget):
     @pg: primary loading/progress bar ref
     """
 
-    def __init__(self, wf: WorkflowObj, coords: List[Tuple[float, float]], alt_coords: List[Tuple[float, float]] = None,
-                 output_ops: OutputOptions = None, img: str = "", mask: str = "", csv: str = "", csv2: str = "",
-                 pg: Progress = None, clust_area: bool = False, log: Logger = None):
+    def __init__(self, pairs: List[Tuple[int, int]], synFiles: List[str], vesFiles: List[str], pairings: pd.DataFrame, output: str, output_ops: OutputOptions = None,
+                 pg: Progress = None, log: Logger = None):
         super().__init__()
         # init class vars: allow referencing within functions without passing explicitly
         self.is_init = False
-        self.data: DataObj
-        self.wf = wf
         self.pg = pg
-        self.output_ops = output_ops
-        self.draw_clust_area = clust_area
         self.dlg = log
+        self.output_ops = output_ops
+        self.synFiles = synFiles
+        self.vesFiles = vesFiles
+        self.pairings = pairings
+        self.output = output
+
+        print(pairs[0])
+
         # init layout
         layout = QFormLayout()
         # header
-        header = QLabel(wf['header'])
+        header = QLabel('Offset / Intersect Analysis')
         header.setStyleSheet("font-size: 24px; font-weight: bold; padding-top: 8px; ")
         layout.addRow(header)
-        desc = QLabel(wf['desc'])
+        desc = QLabel('Progress Page')
         desc.setStyleSheet("font-size: 17px; font-weight: 400; padding-top: 3px; padding-bottom: 20px;")
         desc.setWordWrap(True)
         layout.addRow(desc)
         # REUSABLE PARAMETERS
         self.workflows_header = QLabel("Parameters")
         layout.addRow(self.workflows_header)
+
+        self.setLayout(layout)
+        '''
         # custom props
-        self.cstm_props = []
-        for i in range(len(wf['props'])):
-            prop_l = QLabel(wf['props'][i]['title'])
-            prop_l.setStyleSheet("font-size: 17px; font-weight: 400;")
-            prop_le = QLineEdit()
-            prop_le.setPlaceholderText(wf['props'][i]['placeholder'])
-            layout.addRow(prop_l, prop_le)
-            self.cstm_props.append(prop_le)
+        # self.cstm_props = []
+        # for i in range(len(wf['props'])):
+        #     prop_l = QLabel(wf['props'][i]['title'])
+        #     prop_l.setStyleSheet("font-size: 17px; font-weight: 400;")
+        #     prop_le = QLineEdit()
+        #     prop_le.setPlaceholderText(wf['props'][i]['placeholder'])
+        #     layout.addRow(prop_l, prop_le)
+        #     self.cstm_props.append(prop_le)
         # REAL COORDS SECTION
         file_head = QLabel("Selected Files")
         file_head.setStyleSheet(
@@ -243,6 +240,7 @@ class WorkflowPage(QWidget):
         self.img_cont.addWidget(self.image_frame)
         self.img_cont.addWidget(self.graph_frame)
         layout.addRow(self.img_cont)
+        '''
         # loading bar
         self.progress = QProgressBar(self)
         self.progress.setGeometry(0, 0, 300, 25)
@@ -260,6 +258,7 @@ class WorkflowPage(QWidget):
         self.prog_animation.finished.connect(
             self.prog_animation.start if self.progress.value() < 100 else self.prog_animation.stop)
         self.prog_animation.start()
+        '''
         # run & download btns
         self.run_btn = QPushButton('Run Again', self)
         self.run_btn.setStyleSheet(
@@ -279,8 +278,8 @@ class WorkflowPage(QWidget):
         self.setLayout(layout)
         # props to enable and disable when running wf
         self.wf_props = [self.run_btn, self.image_frame, self.graph_frame, self.gen_rand_cb, self.gen_real_cb]
-        # run on init
-        self.run(wf, coords, alt_coords)
+        '''# run on init
+        self.run(pairs, synFiles, vesFiles)
 
     def update_progress(self, value: int):
         """ UPDATE PROGRESS BAR """
@@ -317,18 +316,17 @@ class WorkflowPage(QWidget):
     def get_custom_values(self):
         return [int(self.cstm_props[i].text()) if self.cstm_props[i].text() else int(self.wf['props'][i]['placeholder']) for i in range(len(self.cstm_props))]
 
-    def download(self, output_ops: OutputOptions, wf: WorkflowObj):
-        logging.info('%s: started downloading, opening thread', wf['name'])
-        self.download_btn.setStyleSheet(
-            "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 3px; background: #ddd; color: white; border-radius: 7px; ")
-        self.download_btn.setDisabled(True)
+    def download(self, output_ops: OutputOptions):
+        logging.info('Started downloading, opening thread')
+        # self.download_btn.setStyleSheet(
+            # "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 3px; background: #ddd; color: white; border-radius: 7px; ")
+        # self.download_btn.setDisabled(True)
         self.dl_thread = QThread()
         self.dl_worker = DownloadWorker()
         self.dl_worker.moveToThread(self.dl_thread)
         self.dl_thread.started.connect(
-            partial(self.dl_worker.run, wf, self.data, output_ops, self.img_drop.currentText(), self.display_img,
-                    self.graph))
-        self.dl_worker.finished.connect(self.on_finish_download)
+            partial(self.dl_worker.run, data = self.data, output_ops = output_ops))
+        # self.dl_worker.finished.connect(self.on_finish_download)
         self.dl_worker.finished.connect(self.dl_thread.quit)
         self.dl_worker.finished.connect(self.dl_worker.deleteLater)
         self.dl_thread.finished.connect(self.dl_thread.deleteLater)
@@ -339,32 +337,28 @@ class WorkflowPage(QWidget):
             "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 3px; background: #007267; color: white; border-radius: 7px; ")
         self.download_btn.setDisabled(False)
 
-    def run(self, wf: WorkflowObj, coords: List[Tuple[float, float]], alt_coords: List[Tuple[float, float]]):
+    def run(self, pairs: List[Tuple[float, float]], synFiles: str, vesFiles: str):
         """ RUN WORKFLOW """
         try:
             prog_wrapper = Progress()
             prog_wrapper.prog.connect(self.update_progress)
             self.prog_animation.start()
 
-            for prop in self.wf_props:
-                prop.setEnabled(False)
+            # for prop in self.wf_props:
+                # prop.setEnabled(False)
 
             # set coords
-            self.coords = coords
-            self.alt_coords = alt_coords
-            self.rand_coords = gen_random_coordinates(img_path=self.img_drop.currentText(),
-                                                      mask_path=self.mask_drop.currentText(), count=int(
-                    self.n_coord_ip.text()) if self.n_coord_ip.text() else len(coords))
+            self.pairs = pairs
+
             # obtain custom props
-            vals = self.get_custom_values()
-            logging.info('%s: running analysis, opening thread', wf['name'])
+            # vals = self.get_custom_values()
+            logging.info('Running offset analysis, opening thread')
             # generate thread
             self.thread = QThread()
-            self.worker = AnalysisWorker()
+            self.worker = RotationAnalysisWorker()
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(
-                partial(self.worker.run, wf, vals, coords, self.rand_coords, alt_coords, self.img_drop.currentText(),
-                        self.mask_drop.currentText(), self.draw_clust_area))
+                partial(self.worker.run, pairs, synFiles, vesFiles))
             self.worker.progress.connect(self.update_progress)
             self.worker.finished.connect(self.on_receive_data)
             self.worker.finished.connect(self.thread.quit)
@@ -377,11 +371,18 @@ class WorkflowPage(QWidget):
     def on_receive_data(self, output_data: DataObj):
         try:
             logging.info(
-                '%s: finished running analysis, closing thread', self.wf['name'])
+                'Finished running analysis, closing thread')
             self.data = output_data
+
+            self.progress.setValue(100)
+            self.pg(100)
+            self.is_init = True
+            self.prog_animation.stop()
+            self.download(output_ops=self.output_ops)
+
             # create ui scheme
-            self.create_visuals(wf=self.wf, n_bins=(self.bars_ip.text() if self.bars_ip.text() else 'fd'),
-                                output_ops=self.output_ops)
+            # self.create_visuals(wf=self.wf, n_bins=(self.bars_ip.text() if self.bars_ip.text() else 'fd'),
+                                # output_ops=self.output_ops)
         except Exception as e:
             self.handle_except(traceback.format_exc())
 

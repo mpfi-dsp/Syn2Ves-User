@@ -28,7 +28,7 @@ from typing import List, Tuple
 from utils import Progress, create_color_pal, enum_to_unit, to_pair_list, pixels_conversion, avg_vals
 from threads import RotationAnalysisWorker, DownloadWorker
 
-class WorkflowPage2(QWidget):
+class AlignWorkflowPage(QWidget):
     """
     WORKFLOW PAGE
     __________________

@@ -21,6 +21,8 @@ class FileType(Enum):
     SYNPASE = 1
     VESICLE = 2
     CSV = 3
+    CSV_2 = 4
+    CSV_3 = 5
 
 class WorkflowGraph(TypedDict):
     type: str
