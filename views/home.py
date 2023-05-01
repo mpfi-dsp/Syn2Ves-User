@@ -180,6 +180,12 @@ class HomePage(QWidget):
         # self.prog_animation.finished.connect(self.prog_animation.deleteLater)
         self.prog_animation.start()
 
+        self.synMesh_le.setText("C:/Users/AlexisA/Documents/Jordan_New_Mesh_Outs/2023-05-01_12-34-29/Final Synapses (as Multi-ROI)")
+        self.vesMesh_le.setText("C:/Users/AlexisA/Documents/Jordan_New_Mesh_Outs/2023-05-01_12-34-29/Final Vesicles (as Multi-ROI)")
+        # self.csv_le.setText()
+        self.synCsv_le.setText("C:/Users/AlexisA/Documents/Jordan_New_Mesh_Outs/2023-05-01_12-34-29/Final Synapses (as Multi-ROI) Measurements.csv")
+        self.vesCsv_le.setText("C:/Users/AlexisA/Documents/Jordan_New_Mesh_Outs/2023-05-01_12-34-29/Final Vesicles (as Multi-ROI) Measurements.csv")
+
         # assign layout
         self.setLayout(layout)
 

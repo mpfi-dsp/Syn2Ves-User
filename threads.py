@@ -123,7 +123,7 @@ class MeshPairingWorker(QObject):
             analysis_df = pair_df1 = pair_df2 = pair_df3 = pd.DataFrame()
             
             # Run Align Code
-            pair_df1, pair_df2, pair_df3 = MakePairs(synCom=synData, vesCom=vesData, searchVolRad=searchRad, synMeshDir=synFiles, vesMeshDir=vesFiles)
+            pair_df1, pair_df2, pair_df3 = MakePairs(synCom=synData, vesCom=vesData, searchVolRad=searchRad, synMeshDir=synFiles, vesMeshDir=vesFiles, pb=self.progress)
 
             self.output_data = DataObj(analysis_df, pair_df1, pair_df2, pair_df3, 1)
             self.finished.emit(self.output_data)

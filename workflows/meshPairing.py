@@ -37,28 +37,40 @@ import pyvista as pv
 from PyQt5.QtWidgets import QFileDialog
 import os
 import time
+from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread, QSize, QByteArray
 
 
 start_time = time.time()
 
 ### User input
 
-def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, synMeshDir: str, vesMeshDir: str):
-    print("1")
+def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, synMeshDir: str, vesMeshDir: str, pb: pyqtSignal):
+    searchVolRad = float(searchVolRad)
     candidatePairs = pd.DataFrame({'synLabel': [], 'synX': [], 'synY': [], 'synZ': [], 'vesLabel':[], 'vesX': [], 'vesY': [], 'vesZ': [], 'comDist': []})
 
     # Load the coordinates for each synapse
 
+    synCom = synCom.head()
+
+    print(f"MAX: {len(synCom.index)}")
+
     for synLabel in synCom.index:
-        print("2")      
+        
+        pb.emit(int(synLabel+1/len(synCom.index) * 100))
+
+        print(f"SYN {synLabel}")
+
         synX = float(synCom.loc[synLabel,'comX'])
         synY = float(synCom.loc[synLabel,'comY'])
         synZ = float(synCom.loc[synLabel,'comZ'])
 
+
         # Load the coordinates for each vesicle cloud  
 
         for vesLabel in vesCom.index:
-            print("3")
+
+            # print(f"VES {vesLabel}")
+
             vesX = float(vesCom.loc[vesLabel, 'comX'])
             vesY = float(vesCom.loc[vesLabel, 'comY'])
             vesZ = float(vesCom.loc[vesLabel, 'comZ'])
@@ -66,17 +78,18 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
             # If the vesicle cloud has a CoM within the search radius of the synapse, calculate the distance between them and add a row the dataframe of candidate pairs
 
             if ((vesX >= (synX - searchVolRad)) and (vesX <= (synX + searchVolRad))) and ((vesY >= (synY - searchVolRad)) and (vesY <= (synY + searchVolRad))) and ((vesZ >= (synZ - searchVolRad)) and (vesZ <= (synZ + searchVolRad))):
-                print("4")
                 comDist = np.sqrt((synX - vesX)**2 + (synY - vesY)**2 + (synZ - vesZ)**2)
-
-                newRow = {'synLabel': synLabel, 'synX': synX, 'synY': synY, 'synZ': synZ, 'vesLabel': vesLabel, 'vesX': vesX, 'vesY': vesY, 'vesZ': vesZ, 'comDist': comDist}
-
-                candidatePairs = candidatePairs.append(newRow, ignore_index = True)
+                newRow = {'synLabel': [synLabel], 'synX': [synX], 'synY': [synY], 'synZ': [synZ], 'vesLabel': [vesLabel], 'vesX': [vesX], 'vesY': [vesY], 'vesZ': [vesZ], 'comDist': [comDist]}
+                newDf = pd.DataFrame(newRow)
+                # candidatePairs = candidatePairs.append(newRow, ignore_index = True)
+                candidatePairs = pd.concat([candidatePairs, newDf], ignore_index=True)
 
     # Convert labels to integers
 
     candidatePairs = candidatePairs.astype({'synLabel':'int'})
     candidatePairs = candidatePairs.astype({'vesLabel':'int'})
+    
+    print(candidatePairs)
 
     # Save the list of candidate pairs as a csv
 
@@ -92,29 +105,27 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
                 'synVertX': [], 'synVertY': [], 'synVertZ': [],
                 'vesVertX': [], 'vesVertY': [], 'vesVertZ': [],'meshNND': []})
 
+    print("newLoop")
+
     # Go through each row of the candidate pairs dataframe
 
     for i in candidatePairs.index: 
 
         # Load labels for the synapse and the vesicle cloud in the candidate pair
-
-        synLabel = int(candidatePairs.synLabel[i])
-        vesLabel = int(candidatePairs.vesLabel[i])
+        synLabel = int(candidatePairs.synLabel[i])+1
+        vesLabel = int(candidatePairs.vesLabel[i])+1
         
         # Load the distance between CoMs for the pair
-
         comDist = candidatePairs.comDist[i]
 
         # Write directories for each mesh
+        synMeshFile = synMeshDir + '/' + str(synLabel)+ '.stl'
+        vesMeshFile = vesMeshDir + '/' + str(vesLabel)+ '.stl'
 
-        synMeshFile = synMeshDir + str(synLabel)+ '.stl'
-        vesMeshFile = vesMeshDir + str(vesLabel)+ '.stl'
-        
-        # with open(f'{synVesPairsDir}/pairingUpdates.txt', 'w') as f:
-            # f.write('syn' + str(synLabel) + ' ves' + str(vesLabel))
+        print(synMeshFile)
+        print(vesMeshFile)
         
         # Use PyVista to read the meshes
-
         reader = pv.get_reader(synMeshFile) 
         synMesh = reader.read()
 
@@ -169,14 +180,21 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
         vesMinFeret = vesCom.loc[vesLabel, 'minFeretLength']
         vesAspectRatio = vesCom.loc[vesLabel, 'aspectRatio']
 
+        print("7")
+
         # Add a new row to the dataframe containing candidate pairs and the distances between their meshes
 
-        newRow = {'synLabel': synLabel, 'synX': candidatePairs.synX[i], 'synY': candidatePairs.synY[i], 'synZ': candidatePairs.synZ[i], 'synHalfSA': synHalfSA, 'synVol': synVol, 'synSphere': synSphere, 'synMaxFeret': synMaxFeret, 'synMinFeret': synMinFeret, 'synAspectRatio': synAspectRatio,
-                    'vesLabel': vesLabel, 'vesX': candidatePairs.vesX[i], 'vesY': candidatePairs.vesY[i], 'vesZ': candidatePairs.vesZ[i], 'vesSA': vesSA, 'vesVol': vesVol, 'vesSphere': vesSphere, 'vesMaxFeret': vesMaxFeret, 'vesMinFeret': vesMinFeret, 'vesAspectRatio': vesAspectRatio, 'comDist': comDist,
-                    'synVertX': synVertX, 'synVertY': synVertY, 'synVertZ': synVertZ,
-                    'vesVertX': vesVertX, 'vesVertY': vesVertY, 'vesVertZ': vesVertZ,'meshNND': meshNND}
+        newRow = {'synLabel': [synLabel], 'synX': [candidatePairs.synX[i]], 'synY': [candidatePairs.synY[i]], 'synZ': [candidatePairs.synZ[i]], 'synHalfSA': [synHalfSA], 'synVol': [synVol], 'synSphere': [synSphere], 'synMaxFeret': [synMaxFeret], 'synMinFeret': [synMinFeret], 'synAspectRatio': [synAspectRatio],
+                    'vesLabel': [vesLabel], 'vesX': [candidatePairs.vesX[i]], 'vesY': [candidatePairs.vesY[i]], 'vesZ': [candidatePairs.vesZ[i]], 'vesSA': [vesSA], 'vesVol': [vesVol], 'vesSphere': [vesSphere], 'vesMaxFeret': [vesMaxFeret], 'vesMinFeret': [vesMinFeret], 'vesAspectRatio': [vesAspectRatio], 'comDist': [comDist],
+                    'synVertX': [synVertX], 'synVertY': [synVertY], 'synVertZ': [synVertZ],
+                    'vesVertX': [vesVertX], 'vesVertY': [vesVertY], 'vesVertZ': [vesVertZ],'meshNND': [meshNND]}
         
-        meshNND_candidates = meshNND_candidates.append(newRow, ignore_index = True)
+        newDf = pd.DataFrame(newRow)
+
+        # meshNND_candidates = meshNND_candidates.append(newRow, ignore_index = True)
+        meshNND_candidates = pd.concat([meshNND_candidates, newDf], ignore_index=True)
+
+        print("8")
 
     # Make a list of synapse labels
 
@@ -226,9 +244,10 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
             minFeret = vesCom.loc[label, 'minFeretLength']
             aspectRatio = vesCom.loc[label, 'aspectRatio']
 
-            newRow = {'label': label, 'comX': comX, 'comY': comY, 'comZ': comZ, 'SA': SA, 'vol': vol, 'sphericity': sphere, 'maxFeret': maxFeret, 'minFeret': minFeret, 'aspectRatio': aspectRatio}
-
-            unpairedVes = unpairedVes.append(newRow, ignore_index = True)
+            newRow = {'label': [label], 'comX': [comX], 'comY': [comY], 'comZ': [comZ], 'SA': [SA], 'vol': [vol], 'sphericity': [sphere], 'maxFeret': [maxFeret], 'minFeret': [minFeret], 'aspectRatio': [aspectRatio]}
+            newDf = pd.DataFrame(newRow)
+            # unpairedVes = unpairedVes.append(newRow, ignore_index = True)
+            unpairedVes = pd.concat([unpairedVes, newDf], ignore_index = True)
         
     # unpairedVesDir = synVesPairsDir + 'unpairedVes.csv'
     # unpairedVes.to_csv(unpairedVesDir, encoding = 'utf-8-sig', index = False) 
