@@ -69,7 +69,7 @@ class PairWorkflowPage(QWidget):
         # init layout
         layout = QFormLayout()
         # header
-        header = QLabel('Offset / Intersect Analysis')
+        header = QLabel('Mesh Pairing')
         header.setStyleSheet("font-size: 24px; font-weight: bold; padding-top: 8px; ")
         layout.addRow(header)
         desc = QLabel('Progress Page')

@@ -116,7 +116,7 @@ class GoldInAndOut(QWidget):
         else:
             logging.info('finished2')
             self.home_page.run_idx = 0
-            self.home_page.start_btn.setText("Run Again")
+            # self.home_page.start_btn.setText("Run Again")
             self.home_page.start_btn.setStyleSheet("font-size: 16px; font-weight: 600; padding: 8px; margin-top: 10px; margin-right: 150px; margin-left: 150px; color: white; border-radius: 7px; background: #E89C12")
 
     def open_logger(self):

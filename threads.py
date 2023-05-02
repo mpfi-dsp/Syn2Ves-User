@@ -71,14 +71,22 @@ class DownloadWorker(QObject):
         try:
             logging.info(
                 'Prepare to download output')
-            out_dir = f'{out_start}/{dl_time}'
-            os.makedirs(out_dir, exist_ok=True)
-            logging.info('attempting to save cleaned dfs')
-
+            
             if(data.to_dl == 0):
-                data.analysis_df.to_csv(f'{out_dir}/OutputData.csv',
+                out_dir = f'{out_start}/Alignment_Out'
+                os.makedirs(out_dir, exist_ok=True)
+                logging.info('attempting to save cleaned dfs')
+
+                data.analysis_df.to_csv(f'{out_dir}/{dl_time}.csv',
                                     index=False, header=True)
             elif(data.to_dl == 1):
+                out_dir = f'{out_start}/Pairing_Out'
+                os.makedirs(out_dir, exist_ok=True)
+                logging.info('attempting to save cleaned dfs')
+
+                out_dir = f'{out_dir}/{dl_time}'
+                os.makedirs(out_dir, exist_ok=True)
+
                 data.pair_df1.to_csv(f'{out_dir}/candidates.csv',
                                     index=False, header=True)
                 data.pair_df2.to_csv(f'{out_dir}/paired.csv',
@@ -129,7 +137,6 @@ class MeshPairingWorker(QObject):
             self.finished.emit(self.output_data)
             logging.info('finished analysis')
         except Exception as e:
-            print("test 2")
             self.dlg = Logger()
             self.dlg.show()
             logging.error(traceback.format_exc())
