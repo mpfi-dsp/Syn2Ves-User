@@ -53,9 +53,11 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
 
     logging.info("Loading all coordinates...")
 
+    # synCom = synCom.head(10)
+
     for synLabel in synCom.index:
         
-        pb.emit(int(synLabel+1/len(synCom.index) * 100))
+        pb.emit(int((synLabel+1)/len(synCom.index) * 50))
 
         print(f"SYN {synLabel}")
 
@@ -109,6 +111,8 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
     logging.info("Iterating through candidate pairs...")
 
     for i in candidatePairs.index: 
+
+        pb.emit(int((i+1)/len(candidatePairs.index) * 49)+50)
 
         # Load labels for the synapse and the vesicle cloud in the candidate pair
         synLabel = int(candidatePairs.synLabel[i])

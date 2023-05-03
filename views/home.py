@@ -39,12 +39,15 @@ class HomePage(QWidget):
         desc.setWordWrap(True)
         layout.addRow(desc)
 
-        # upload header
-        self.upload_header = QLabel("Select Alignment Inputs")
-        # file btns widget
-        h_bl = QHBoxLayout()
-        h_bl.addWidget(self.upload_header)
-        layout.addRow(h_bl)
+        self.mesh_uploads_header = QLabel("Select Mesh Folders")
+        _h_bl = QHBoxLayout()
+        _h_bl.addWidget(self.mesh_uploads_header)
+        layout.addRow(_h_bl)
+        self.mesh_uploads_desc = QLabel("Required for Both Workflows")
+        self.mesh_uploads_desc.setStyleSheet("font-size: 17px; font-weight: 400; padding-top: 3px; padding-bottom: 10px;")
+        _d_bl = QHBoxLayout()
+        _d_bl.addWidget(self.mesh_uploads_desc)
+        layout.addRow(_d_bl)
         # synapse mesh folder btn
         synMesh_btn = QPushButton('Set Synapse Folder', self)
         synMesh_btn.setCursor(QCursor(Qt.PointingHandCursor))
@@ -65,29 +68,11 @@ class HomePage(QWidget):
         self.vesMesh_le.setPlaceholderText("None Selected (Folder of STL Files)")
         # add vesicle mesh row
         layout.addRow(vesMesh_btn, self.vesMesh_le)
-        # csv btn
-        csv_btn = QPushButton('Set Pairing CSV', self)
-        csv_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        csv_btn.setToolTip('Synapse and Vesicle Paits. CSV must have synLabel and vesLabel columns with no spaces.')
-        csv_btn.clicked.connect(partial(self.open_file_picker, FileType.CSV))
-        # csv input
-        self.csv_le = QLineEdit()
-        self.csv_le.setPlaceholderText("None Selected (CSV)")
-        # add csv row
-        layout.addRow(csv_btn, self.csv_le)
 
-        # analysis start btn
-        self.start_btn = QPushButton('Run Align Analysis', self)
-        self.start_btn.setStyleSheet(
-            "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 15px; margin-right: 150px; margin-left: 150px; background: #E89C12; color: white; border-radius: 7px; ")
-        self.start_btn.clicked.connect(start)
-        self.start_btn.setCursor(QCursor(Qt.PointingHandCursor))
-        layout.addRow(self.start_btn)
-        
         spacer = QSpacerItem(15, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
         layout.addItem(spacer)
 
-        self.more_uploads_header = QLabel("Select Mesh Pairing Inputs")
+        self.more_uploads_header = QLabel("Select Pairing Inputs")
         _h_bl = QHBoxLayout()
         _h_bl.addWidget(self.more_uploads_header)
         layout.addRow(_h_bl)
@@ -128,6 +113,34 @@ class HomePage(QWidget):
         self.pair_btn.clicked.connect(pair)
         self.pair_btn.setCursor(QCursor(Qt.PointingHandCursor))
         layout.addRow(self.pair_btn)
+        
+        spacer = QSpacerItem(15, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        layout.addItem(spacer)
+
+        # upload header
+        self.upload_header = QLabel("Select Alignment Inputs")
+        # file btns widget
+        h_bl = QHBoxLayout()
+        h_bl.addWidget(self.upload_header)
+        layout.addRow(h_bl)
+        # csv btn
+        csv_btn = QPushButton('Set Pairing CSV', self)
+        csv_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        csv_btn.setToolTip('Synapse and Vesicle Paits. CSV must have synLabel and vesLabel columns with no spaces.')
+        csv_btn.clicked.connect(partial(self.open_file_picker, FileType.CSV))
+        # csv input
+        self.csv_le = QLineEdit()
+        self.csv_le.setPlaceholderText("None Selected (CSV)")
+        # add csv row
+        layout.addRow(csv_btn, self.csv_le)
+
+        # analysis start btn
+        self.start_btn = QPushButton('Run Align Analysis', self)
+        self.start_btn.setStyleSheet(
+            "font-size: 16px; font-weight: 600; padding: 8px; margin-top: 15px; margin-right: 150px; margin-left: 150px; background: #E89C12; color: white; border-radius: 7px; ")
+        self.start_btn.clicked.connect(start)
+        self.start_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        layout.addRow(self.start_btn)
         
         spacer = QSpacerItem(15, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
         layout.addItem(spacer)
