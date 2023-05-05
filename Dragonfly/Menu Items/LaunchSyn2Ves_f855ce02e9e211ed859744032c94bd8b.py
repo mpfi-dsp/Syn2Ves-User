@@ -18,6 +18,10 @@ from ORSServiceClass.menuItems.userDefinedMenuItem import UserDefinedMenuItem
 from ORSServiceClass.actionAndMenu.menu import Menu
 from ORSServiceClass.decorators.infrastructure import interfaceMethod
 
+import configparser
+import pathlib
+import os
+import subprocess
 
 class LaunchSyn2Ves_f855ce02e9e211ed859744032c94bd8b(UserDefinedMenuItem):
 
@@ -45,8 +49,21 @@ class LaunchSyn2Ves_f855ce02e9e211ed859744032c94bd8b(UserDefinedMenuItem):
         Will be executed when the menu item is selected.
         """
 
-        import os
-        os.system(r'"C:/Users/AlexisA/Documents/GitHub/Syn2Ves-User/dist/Syn2Ves 1.2.0.exe"')
+        # Get path of current script, and config file
+        current_path = pathlib.Path(__file__).parent.resolve()
+        config_path = os.path.join(current_path, "config.ini")
+
+        # Read the config
+        config = configparser.ConfigParser()
+        config.read(config_path)
+
+        # Get the values of the path variables
+        syn2ves_exe_path = str(config.get('DEFAULT', 'syn2ves_exe_path'))
+
+        # Use the variables to run macro
+        print(f"Syn2Ves path: {syn2ves_exe_path}")
+        # os.system(f'"{syn2ves_exe_path}"')
+        subprocess.Popen([syn2ves_exe_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         pass
         

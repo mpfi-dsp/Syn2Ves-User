@@ -21,30 +21,16 @@ import time
 from PyQt5.QtWidgets import QFileDialog
 
 import ORSModel
-from ORSModel import MultiROI
-from ORSModel import Managed
-from ORSModel import ROI
-from ORSModel import VisualRuler
-from ORSModel import Vector3
-
-# Import stack below this may be outdated, check l8r
-from ORSServiceClass.actionAndMenu.menu import Menu
-from ORSServiceClass.decorators.infrastructure import interfaceMethod
-from ORSServiceClass.menuItems.contextualMenuItem import ContextualMenuItem
 from ORSServiceClass.ORSWidget.chooseObjectAndNewName.chooseObjectAndNewName import ChooseObjectAndNewName
-from ORSServiceClass.ORSWidget.SimpleEntryDialog.simpleEntryDialog import SimpleEntryDialog
-
 from ORSServiceClass.menuItems.userDefinedMenuItem import UserDefinedMenuItem
 from ORSServiceClass.actionAndMenu.menu import Menu
 from ORSServiceClass.decorators.infrastructure import interfaceMethod
-
-from OrsHelpers.ListHelper import ListHelper
-from OrsHelpers.multiroilabelhelper import MultiROILabelHelper
-from OrsHelpers.primitivehelper import PrimitiveHelper
-
 from OrsLibraries.workingcontext import WorkingContext
-
 from OrsPythonPlugins.OrsMacroPlayer.OrsMacroPlayer import OrsMacroPlayer
+
+import configparser
+import pathlib
+import os
 
 class ExportMultiROIAsMeshTop_db4417fdca6211ed90f744032c94bd8e(UserDefinedMenuItem):
 
@@ -72,42 +58,32 @@ class ExportMultiROIAsMeshTop_db4417fdca6211ed90f744032c94bd8e(UserDefinedMenuIt
         Will be executed when the menu item is selected.
         """
 
-        cls._runMacro()
+        # Get path of current script, and config file
+        current_path = pathlib.Path(__file__).parent.resolve()
+        config_path = os.path.join(current_path, "config.ini")
 
-        # MultiToExport = cls._selectMultiROI("Select a MultiROI to Export")
-        #
-        # if MultiToExport == None:
-        #     return
-        #
-        # start_time = time.time()
-        #
-        # aFolder = os.path.join(
-        #     QFileDialog.getExistingDirectory(WorkingContext.getCurrentContextWindow(), caption="Select folder ",
-        #                                      options=QFileDialog.ShowDirsOnly), '')
-        # aFolder = os.path.join(aFolder, datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-        # os.makedirs(aFolder, exist_ok=True)
+        # Read the config
+        config = configparser.ConfigParser()
+        config.read(config_path)
 
-        # Put your code here
+        # Get the values of the path variables
+        dragonfly_macro_path = config.get('DEFAULT', 'dragonfly_macro_path')
+
+        # Use the variables to run macro
+        print(f"Dragonfly plugin path: {dragonfly_macro_path}")
+
+        cls._runMacro(dragonfly_macro_path)
+
         pass
 
     @classmethod
     @interfaceMethod
-    def _selectMultiROI(cls, dialog):
+    def _runMacro(cls, macroPath):
         """
-        Select a MultiROI from all MultiROIs in the project
-
-        :param dialog: Dialog to be shown with selection window
-        :type dialog: str
+        :param macroPath: Math to Macro for Exporting
+        :type macroPath: str
         """
-        class_name = "MultiROI"
-        class_object = getattr(ORSModel, class_name)
-        return ChooseObjectAndNewName.prompt([class_object], parent=WorkingContext.getCurrentContextWindow(), dialog_title=dialog, allowNone=True, getNewTitle=False)
-
-    @classmethod
-    @interfaceMethod
-    def _runMacro(cls):
 
         mcrPly = OrsMacroPlayer()
-        path = "C:/Users/AlexisA/AppData/Local/ORS/Dragonfly2022.2/pythonUserExtensions/Macros/Jordan_Mesh_Export_c2469264e83d11ed973f44032c94bd8e.py"
-        mcrPly.setMacroFromPath(path)
+        mcrPly.setMacroFromPath(macroPath)
         mcrPly.executeMacro(True, False)

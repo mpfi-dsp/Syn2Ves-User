@@ -42,11 +42,11 @@ from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread, QSize, QByteArray
 import logging
 
 start_time = time.time()
-
+MICRON_MOD: float = 1000000
 ### User input
 
 def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, synMeshDir: str, vesMeshDir: str, pb: pyqtSignal):
-    searchVolRad = float(searchVolRad)
+    searchVolRad = float(searchVolRad) * MICRON_MOD
     candidatePairs = pd.DataFrame({'synLabel': [], 'synX': [], 'synY': [], 'synZ': [], 'vesLabel':[], 'vesX': [], 'vesY': [], 'vesZ': [], 'comDist': []})
 
     # Load the coordinates for each synapse
