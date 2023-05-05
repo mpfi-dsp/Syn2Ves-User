@@ -103,11 +103,11 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 
 While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS dragonfly software. This section will give a brief overview of how to install all of the neccessary dragonfly files in order to have it run correctly.
 
-All Dragonfly Files to download are in the [“Dragonfly Implementation Files”](/therealarman/Syn2Ves-User/tree/main/Dragonfly%20Implementation%20Files) folder.
+All Dragonfly Files to download are in the [“Dragonfly Implementation Files”](/therealarman/Syn2Ves-User/Dragonfly%20Implementation%20Files) folder.
 
 ### Menu Items
 
-1)  Download all of the files in the **Menu Items* folder
+1)  Download all of the files in the **Menu Items** folder
 2)  Click Windows Key + R to open the run command
 3)	Type %AppData% and click OK
 4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\GenericMenuItems
@@ -116,7 +116,7 @@ All Dragonfly Files to download are in the [“Dragonfly Implementation Files”
 
 ### Macros
 
-1)  Download all of the files in the **Macro* folder
+1)  Download all of the files in the **Macro** folder
 2)  Click Windows Key + R to open the run command
 3)	Type %AppData% and click OK
 4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\Macros
