@@ -75,8 +75,6 @@ I recommend reading through this handy article for more details regarding the sp
 
 ## Output 📊
 
-The program has two different functionalities, each outputting a different set of files.
-
 ### Alignment Output
 
 Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
@@ -97,13 +95,11 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 - `IOU`: intersection over union of the synapse and vesicle projections
 - `IOS`: intersection over synapse area of the synapse and vesicle projections
 
-### Mesh Pairing Output
-
 ## Dragonfly Implementation
 
 While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS dragonfly software. This section will give a brief overview of how to install all of the neccessary dragonfly files in order to have it run correctly.
 
-All Dragonfly Files to download are in the [“Dragonfly”](/therealarman/Syn2Ves-User/Dragonfly) folder.
+All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
 
 ### Menu Items
 
