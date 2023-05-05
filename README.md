@@ -43,6 +43,36 @@ python -u main.py
 ```
 
 
+## Compiling To Executable 🚀
+
+We are using [pyinstaller](https://www.pyinstaller.org/#) to compile Syn2Ves into a finished application. The steps differ based on your platform, but the following instructions are for windows (10-11).
+
+First, ensure you have a `main.spec` and `resources.qrc` file. If you don't, run the following commands:
+
+```
+pyinstaller main.spec
+
+pyrcc5 resources.qrc -o resources.py
+```
+
+Then to compile to exe enter the directory with `main.py` and run the following command:
+
+WINDOWS:
+```
+pyinstaller.exe --onefile --windowed --icon=logo.ico main.py
+```
+
+MACOS:
+```
+pyinstaller --onefile --windowed --icon=logo.ico --codesign-identity=YOUR_APPLE_DEVELOPER_CERT_CODESIGN_IDENTITY --target-arch [x86_64|universal2] main.py
+```
+
+This will spew output in the console and may take a while. The final exe file can be found in the `/dist` directory.
+
+I recommend reading through this handy article for more details regarding the specifics of compilation, particularly if you're having trouble getting icons to load: [Packaging PyQt5 applications for Windows, with PyInstaller](https://www.pythonguis.com/tutorials/packaging-pyqt5-pyside2-applications-windows-pyinstaller/)
+
+*Pyinstaller should be capable of building for MacOS, but I have yet to test it. If you're trying to compile for Linux, you're capable of figuring out how (or you can just use wine).*
+
 ## Output 📊
 
 The program has two different functionalities, each outputting a different set of files.
@@ -68,3 +98,26 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 - `IOS`: intersection over synapse area of the synapse and vesicle projections
 
 ### Mesh Pairing Output
+
+## Dragonfly Implementation
+
+While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS dragonfly software. This section will give a brief overview of how to install all of the neccessary dragonfly files in order to have it run correctly.
+
+All Dragonfly Files to download are in the [“Dragonfly”](/therealarman/Syn2Ves-User/Dragonfly) folder.
+
+### Menu Items
+
+1)  Download all of the files in the **Menu Items** folder
+2)  Click Windows Key + R to open the run command
+3)	Type %AppData% and click OK
+4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\GenericMenuItems
+5)	In this folder, drag in all of the downloaded files (Put each of the files into here individually, not the entire folder)
+6)	Open the **config.ini** file, and set the paths to the appropriate locations
+
+### Macros
+
+1)  Download all of the files in the **Macro** folder
+2)  Click Windows Key + R to open the run command
+3)	Type %AppData% and click OK
+4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\Macros
+5)	In this folder, drag in the .py file
