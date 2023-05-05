@@ -141,7 +141,7 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
 
         closest_cells, closest_points = vesMesh.find_closest_cell(synMesh.points, return_closest_point=True)
         d_exact = np.linalg.norm(synMesh.points - closest_points, axis=1)
-        meshNND = np.min(d_exact)
+        meshNND_m = np.min(d_exact)
 
         # Make an array of coordinates for each point on the synapse mesh
         # In the same row, add the coordinates for the closest point on the vesicle mesh and the distance between points
@@ -154,19 +154,23 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
 
         # Find the points that have the shortest distance bewteen them and make a dataframe of their coordinates
 
-        synPointsPairedMin = pd.DataFrame(synPointsPaired.loc[synPointsPaired.dist == meshNND])
+        synPointsPairedMin = pd.DataFrame(synPointsPaired.loc[synPointsPaired.dist == meshNND_m])
 
         # Synapse meshes may have multiple points where they are the minimum distance from the vesicle mesh
         # We need these coordinates to visualize the nearest neighbor distance, but only one is necessary
         # Arbitrarily select the first pair of vertices listed with minimum distance between them
 
-        synVertX = synPointsPairedMin.iloc[0, 0] 
-        synVertY = synPointsPairedMin.iloc[0, 1]
-        synVertZ = synPointsPairedMin.iloc[0, 2]
+        synVertX = (synPointsPairedMin.iloc[0, 0]) * 10**(6) 
+        synVertY = (synPointsPairedMin.iloc[0, 1]) * 10**(6) 
+        synVertZ = (synPointsPairedMin.iloc[0, 2]) * 10**(6) 
         
-        vesVertX = synPointsPairedMin.iloc[0, 3] 
-        vesVertY = synPointsPairedMin.iloc[0, 4]
-        vesVertZ = synPointsPairedMin.iloc[0, 5]
+        vesVertX = (synPointsPairedMin.iloc[0, 3]) * 10**(6) 
+        vesVertY = (synPointsPairedMin.iloc[0, 4]) * 10**(6) 
+        vesVertZ = (synPointsPairedMin.iloc[0, 5]) * 10**(6) 
+
+        # Convert Mesh NND to nm
+
+        meshNND = meshNND_m * 10**(9)
 
         # Lookup voxel measurements for each syn/ves
 
