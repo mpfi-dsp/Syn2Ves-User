@@ -43,6 +43,36 @@ python -u main.py
 ```
 
 
+## Compiling To Executable
+
+We are using [pyinstaller](https://www.pyinstaller.org/#) to compile Syn2Ves into a finished application. The steps differ based on your platform, but the following instructions are for windows (10-11).
+
+First, ensure you have a `main.spec` and `resources.qrc` file. If you don't, run the following commands:
+
+```
+pyinstaller main.spec
+
+pyrcc5 resources.qrc -o resources.py
+```
+
+Then to compile to exe enter the directory with `main.py` and run the following command:
+
+WINDOWS:
+```
+pyinstaller.exe --onefile --windowed --icon=logo.ico main.py
+```
+
+MACOS:
+```
+pyinstaller --onefile --windowed --icon=logo.ico --codesign-identity=YOUR_APPLE_DEVELOPER_CERT_CODESIGN_IDENTITY --target-arch [x86_64|universal2] main.py
+```
+
+This will spew output in the console and may take a while. The final exe file can be found in the `/dist` directory.
+
+I recommend reading through this handy article for more details regarding the specifics of compilation, particularly if you're having trouble getting icons to load: [Packaging PyQt5 applications for Windows, with PyInstaller](https://www.pythonguis.com/tutorials/packaging-pyqt5-pyside2-applications-windows-pyinstaller/)
+
+*Pyinstaller should be capable of building for MacOS, but I have yet to test it. If you're trying to compile for Linux, you're capable of figuring out how (or you can just use wine).*
+
 ## Output 📊
 
 The program has two different functionalities, each outputting a different set of files.
