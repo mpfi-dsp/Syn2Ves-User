@@ -4,7 +4,7 @@
 
 Welcome to the Syn2Ves Program Documentation! 🎉
 
-**Syn2Ves** is a program designed to pair synapses with vesicles based on position, and quanitfy the alignment of these pairings.
+**Syn2Ves** is a program designed to pair synapses with vesicles based on position, and quantify the alignment of these pairings.
 
 The program takes the following inputs:
 
@@ -15,16 +15,16 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 
 All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
 
-### Menu Items
+### Installing Menu Items
 
 1)  Download all of the files in the **Menu Items** folder
 2)  Click Windows Key + R to open the run command
 3)	Type %AppData% and click OK
 4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\GenericMenuItems
 5)	In this folder, drag in all of the downloaded files (Put each of the files into here individually, not the entire folder)
-6)	Open the **config.ini** file, and set the paths to the appropriate locations
+6)	Open the **config.ini** file, and set the paths to the appropriate locations (make sure all slashes are back slashes)
 
-### Macros
+### Installing Macros
 
 1)  Download all of the files in the **Macro** folder
 2)  Click Windows Key + R to open the run command
@@ -32,6 +32,22 @@ All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
 4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\Macros
 5)	In this folder, drag in the .py file
 
+### Using the Menus
+
+#### "Export MultiROI Labels as Meshes"
+
+1) Select 1 or more MultiROIs that you'd like to fully export in the Properties tab on Dragonfly
+2) Run the Menu Item
+3) Select where you'd like your meshes exported (Each MultiROI will get its own folder within the directory you choose)
+
+#### "Launch Syn2Ves Program"
+
+1) Run the Menu Item to launch the program
+2) Firstly, select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
+3) Select your Synapse and Vesicle CSVs, which are also exports of the previous menu
+4) Run Pairing
+5) Select the "paired" CSV exported from the Pairing workflow as your Pairing CSV for Alignment Analysis
+6) Run Alignment Analysis
 
 ## Alignment Inputs 📂
 
