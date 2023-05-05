@@ -75,8 +75,6 @@ I recommend reading through this handy article for more details regarding the sp
 
 ## Output 📊
 
-The program has two different functionalities, each outputting a different set of files.
-
 ### Alignment Output
 
 Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
@@ -96,8 +94,6 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 - `Intersect`: a value representing the amount of intersecting pixels when projections of the synapse and vesicle are aligned
 - `IOU`: intersection over union of the synapse and vesicle projections
 - `IOS`: intersection over synapse area of the synapse and vesicle projections
-
-### Mesh Pairing Output
 
 ## Dragonfly Implementation
 
