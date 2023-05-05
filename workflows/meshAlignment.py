@@ -162,8 +162,10 @@ def Syn2Ves(syn_path: str, ves_path: str, pairing: List[Tuple[int, int]], pb: py
         syn = os.path.join(syn_path, synFiles[pairing[i][0]-1])
         ves = os.path.join(ves_path, vesFiles[pairing[i][1]-1])
 
-        print(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
-        logging.info(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
+        # print(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
+        # logging.info(f"SYN: {pairing[i][0]}, VES: {pairing[i][1]}")
+
+        print(f"{syn}, {ves}")
 
         sy_reader = pv.get_reader(syn)
         ves_reader = pv.get_reader(ves)

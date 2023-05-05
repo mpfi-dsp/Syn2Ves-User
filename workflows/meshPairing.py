@@ -42,12 +42,15 @@ from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread, QSize, QByteArray
 import logging
 
 start_time = time.time()
-MICRON_MOD: float = 1000000
+# MICRON_MOD: float = 1000000
 ### User input
 
 def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, synMeshDir: str, vesMeshDir: str, pb: pyqtSignal):
-    searchVolRad = float(searchVolRad) * MICRON_MOD
+    searchVolRad = float(searchVolRad)
     candidatePairs = pd.DataFrame({'synLabel': [], 'synX': [], 'synY': [], 'synZ': [], 'vesLabel':[], 'vesX': [], 'vesY': [], 'vesZ': [], 'comDist': []})
+
+    synCom = synCom.set_index('labels')
+    vesCom = vesCom.set_index('labels')
 
     # Load the coordinates for each synapse
 
@@ -118,16 +121,16 @@ def MakePairs(synCom: pd.DataFrame, vesCom: pd.DataFrame, searchVolRad: float, s
         synLabel = int(candidatePairs.synLabel[i])
         vesLabel = int(candidatePairs.vesLabel[i])
 
-        print(synLabel+1)
-        print(vesLabel+1)
+        print(synLabel)
+        print(vesLabel)
         print("\n")
         
         # Load the distance between CoMs for the pair
         comDist = candidatePairs.comDist[i]
 
         # Write directories for each mesh
-        synMeshFile = synMeshDir + '/' + str(synLabel+1)+ '.stl'
-        vesMeshFile = vesMeshDir + '/' + str(vesLabel+1)+ '.stl'
+        synMeshFile = synMeshDir + '/' + str(synLabel)+ '.stl'
+        vesMeshFile = vesMeshDir + '/' + str(vesLabel)+ '.stl'
         
         # Use PyVista to read the meshes
         reader = pv.get_reader(synMeshFile) 
