@@ -43,7 +43,7 @@ python -u main.py
 ```
 
 
-## Compiling To Executable
+## Compiling To Executable 🚀
 
 We are using [pyinstaller](https://www.pyinstaller.org/#) to compile Syn2Ves into a finished application. The steps differ based on your platform, but the following instructions are for windows (10-11).
 
@@ -98,3 +98,9 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 - `IOS`: intersection over synapse area of the synapse and vesicle projections
 
 ### Mesh Pairing Output
+
+## Dragonfly Implementation
+
+While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS dragonfly software. This section will give a brief overview of how to install all of the neccessary dragonfly files in order to have it run correctly.
+
+All Dragonfly Files to download are in the [“Dragonfly Implementation Files”](Dragonfly Implementation Files/config.ini) folder.
