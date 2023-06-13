@@ -122,16 +122,16 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 
 - `synLabel`: numerical label of the synapse
 - `vesLabel`: numerical label of the vesicle
-- `Og_Ves_X`: x value of the original vesicle position
-- `Og_Ves_Y`: y value of the original vesicle position
-- `Og_Ves_Z`: z value of the original vesicle position
-- `Ves_X`: x value of the rotated vesicle position
-- `Ves_Y`: y value of the rotated vesicle position
-- `Ves_Z`: z value of the rotated vesicle position
-- `Syn_X`: x value of the synapse position
-- `Syn_Y`: y value of the synapse position
-- `Syn_Z`: z value of the synapse position
-- `VectorAngle`: the vector angle between the center of mass of the original vesicle (Og_Ves) and the center of mass of the maximum surface area adjusted vesicle (Ves), with the synapse center of mass (Syn) at the center
+- `Og_Ves_X`: x value of the original vesicle position in nm
+- `Og_Ves_Y`: y value of the original vesicle position in nm
+- `Og_Ves_Z`: z value of the original vesicle position in nm
+- `Ves_X`: x value of the rotated vesicle position in nm
+- `Ves_Y`: y value of the rotated vesicle position in nm
+- `Ves_Z`: z value of the rotated vesicle position in nm
+- `Syn_X`: x value of the synapse position in nm
+- `Syn_Y`: y value of the synapse position in nm
+- `Syn_Z`: z value of the synapse position in nm
+- `VectorAngle`: the vector angle, in degrees, between the center of mass of the original vesicle (Og_Ves) and the center of mass of the maximum surface area adjusted vesicle (Ves), with the synapse center of mass (Syn) at the center
 - `Intersect`: a value representing the amount of intersecting pixels when projections of the synapse and vesicle are aligned
 - `IOU`: intersection over union of the synapse and vesicle projections
 - `IOS`: intersection over synapse area of the synapse and vesicle projections
