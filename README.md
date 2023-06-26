@@ -32,14 +32,6 @@ All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
 4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\Macros
 5)	In this folder, drag in the .py file
 
-### Patching PyVista 0.39.1
-
-Syn2Ves requires a small correction to PyVista 0.39.1. Use the following command to install pyvista
-
-```
-pip install https://github.com/anders0nj/pyvista.git@release/0.39.1
-```
-
 ### Using the Menu
 
 #### "Export MultiROI Labels as Meshes"
