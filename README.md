@@ -32,7 +32,15 @@ All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
 4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\Macros
 5)	In this folder, drag in the .py file
 
-### Using the Menus
+### Patching PyVista 0.39.1
+
+Syn2Ves requires a small correction to PyVista 0.39.1. Use the following command to install pyvista
+
+'''
+pip install https://github.com/anders0nj/pyvista.git@release/0.39.1
+'''
+
+### Using the Menu
 
 #### "Export MultiROI Labels as Meshes"
 
@@ -42,23 +50,18 @@ All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
 
 #### "Launch Syn2Ves Program"
 
-1) Run the Menu Item to launch the program
-2) Firstly, select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
+1) Run the menu item to launch the program
+2) Select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
 3) Select your Synapse and Vesicle CSVs, which are also exports of the previous menu
 4) Run Pairing
 5) Select the "paired" CSV exported from the Pairing workflow as your Pairing CSV for Alignment Analysis
 6) Run Alignment Analysis
 
-## Alignment Inputs 📂
+### "Launch Syn2Ves Visualizer"
 
-### Synapse Folder 🧠
-A folder containing STL files of synapses, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
-
-### Vesicle Folder 🧠
-A folder containing STL files of vesicles, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
-
-### Pairing CSV 🧩
-A CSV file containing the pairing information of the synapses and vesicles. The file must be formatted with the following column names: `synLabel` and `vesLabel`. These columns should contain numerical labels for each synapse and vesicle, respectively. 
+1) Run the menu item to launch the program
+2) Select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
+3) Use the "paired.csv" output from the pairing step to find IDs for a synapse-vesicle cloud pair. Enter these IDs in the appropriate prompt
 
 ## Mesh Pairing Inputs 📂
 
@@ -70,6 +73,17 @@ Same as Synapse CSV but for Vesicles.
 
 ### COM Search Radius 🔍
 The search radius from a synapses' center of mass. The program will only pair a vesicle cloud with a synapse if its center of mass falls within the cubic volume with this radius.
+
+## Alignment Inputs 📂
+
+### Synapse Folder 🧠
+A folder containing STL files of synapses, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
+
+### Vesicle Folder 🧠
+A folder containing STL files of vesicles, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
+
+### Pairing CSV 🧩
+A CSV file containing the pairing information of the synapses and vesicles. The file must be formatted with the following column names: `synLabel` and `vesLabel`. These columns should contain numerical labels for each synapse and vesicle, respectively. 
 
 ## Installation 🚀
 
@@ -122,15 +136,15 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 
 - `synLabel`: numerical label of the synapse
 - `vesLabel`: numerical label of the vesicle
-- `Og_Ves_X`: x value of the original vesicle position in nm
-- `Og_Ves_Y`: y value of the original vesicle position in nm
-- `Og_Ves_Z`: z value of the original vesicle position in nm
-- `Ves_X`: x value of the rotated vesicle position in nm
-- `Ves_Y`: y value of the rotated vesicle position in nm
-- `Ves_Z`: z value of the rotated vesicle position in nm
-- `Syn_X`: x value of the synapse position in nm
-- `Syn_Y`: y value of the synapse position in nm
-- `Syn_Z`: z value of the synapse position in nm
+- `Og_Ves_X`: x value of camera position in nm
+- `Og_Ves_Y`: y value of camera position in nm
+- `Og_Ves_Z`: z value of camera position in nm
+- `Ves_X`: x value of vesicle position after rotations in nm
+- `Ves_Y`: y value of vesicle position after rotations in nm
+- `Ves_Z`: z value of vesicle position after rotations in nm
+- `Syn_X`: x value of synapse position after rotations in nm
+- `Syn_Y`: y value of synapse position after rotations in nm
+- `Syn_Z`: z value of synapse position after rotations in nm
 - `VectorAngle`: the vector angle, in degrees, between the center of mass of the original vesicle (Og_Ves) and the center of mass of the maximum surface area adjusted vesicle (Ves), with the synapse center of mass (Syn) at the center
 - `Intersect`: a value representing the amount of intersecting pixels when projections of the synapse and vesicle are aligned
 - `IOU`: intersection over union of the synapse and vesicle projections
