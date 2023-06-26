@@ -36,9 +36,9 @@ All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
 
 Syn2Ves requires a small correction to PyVista 0.39.1. Use the following command to install pyvista
 
-'''
+```
 pip install https://github.com/anders0nj/pyvista.git@release/0.39.1
-'''
+```
 
 ### Using the Menu
 
