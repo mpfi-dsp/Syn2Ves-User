@@ -1,3 +1,4 @@
+git
 numpy
 PyQt5
 numexpr
@@ -8,4 +9,4 @@ matplotlib
 pandas
 typing_extensions
 pyinstaller
-pyvista==0.39.1
+git+https://github.com/anders0nj/pyvista.git@release/0.39.1
