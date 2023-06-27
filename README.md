@@ -79,6 +79,14 @@ A CSV file containing the pairing information of the synapses and vesicles. The 
 
 ## Installation 🚀
 
+Before installing, you will need to install pip and git. 
+
+```
+conda install pip
+
+conda install git
+```
+
 To run the program, clone this repository and execute the following commands:
 
 ```
