@@ -4,9 +4,7 @@
 
 Welcome to the Syn2Ves Program Documentation! 🎉
 
-**Syn2Ves** is a program designed to pair synapses with vesicles based on position, and quantify the alignment of these pairings.
-
-The program takes the following inputs:
+**Syn2Ves** is a program designed to pair synapses with vesicle clouds based on position, and quantify the alignment of these pairings.
 
 
 ## Dragonfly Implementation
