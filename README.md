@@ -60,7 +60,7 @@ Start by opening Dragonfly. The menu items should appear under the heading **Syn
 
 - Synapse CSV: A CSV file containing center of mass data for the synapses. The file must be formatted with the following column names: `labels`, `comX`, `comY`, `comZ`, `vol`, `SA`, `halfSA`, `sphericity`, `maxFeretLength`, `minFeretLength`, `aspectRatio`. These columns should contain numerical labels for each synapse, followed by its center of mass coordinates (x, y, z), volume, surface area, half surface area, sphericity, maximum Feret length, minimum Feret length, and aspect ratio, respectively. 
 - Vesicle CSV: Same as Synapse CSV but for vesicles.
-- COM Search Radius: The search radius from a synapses' center of mass. The program will only pair a vesicle cloud with a synapse if its center of mass falls within the cubic volume with this radius.
+- COM Search Radius (microns): The search radius from a synapses' center of mass. The program will only pair a vesicle cloud with a synapse if its center of mass falls within the cubic volume with this radius.
 
 #### Mesh Pairing Output
 
