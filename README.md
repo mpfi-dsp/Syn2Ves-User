@@ -1,5 +1,3 @@
-# Syn2Ves Program Documentation 🧠🔍📊
-
 <div id="user-content-toc">
   <ul>
     <summary><h1 style="display: inline-block;">Syn2Ves Program Documentation 🧠🔍📊</h1></summary>
