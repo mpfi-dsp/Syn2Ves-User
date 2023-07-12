@@ -9,9 +9,9 @@ Welcome to the Syn2Ves Program Documentation! 🎉
 
 ## Dragonfly Implementation
 
-While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS dragonfly software. This section will give a brief overview of how to install all of the neccessary dragonfly files in order to have it run correctly.
+While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS Dragonfly software. This section will give a brief overview of how to install files from the repository such that our tools appear as menu items.
 
-All Dragonfly Files to download are in the [“Dragonfly”](/Dragonfly) folder.
+Download all files in the [“Dragonfly”](/Dragonfly) folder and download the **main.exe** file from new releases.
 
 ### Installing Menu Items
 
