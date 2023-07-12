@@ -34,6 +34,8 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 
 ## Using the Menu
 
+Start by opening Dragonfly. The menu items should appear under the heading **Synapse-Vesicle Tools**.
+
 ### Export MultiROI Labels as Meshes
 
 1) Select 1 or more MultiROIs that you'd like to fully export in the Properties tab on Dragonfly
