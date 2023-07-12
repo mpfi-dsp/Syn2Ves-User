@@ -40,6 +40,11 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 2) Run the Menu Item
 3) Select where you'd like your meshes exported (Each MultiROI will get its own folder within the directory you choose)
 
+#### Output
+
+- Folders containing meshes
+- CSVs with measurements for each MultiROI class
+
 ### Launch Syn2Ves Program
 
 1) Run the menu item to launch the program
@@ -49,19 +54,24 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 5) Select the "paired" CSV exported from the Pairing workflow as your Pairing CSV for Alignment Analysis
 6) Run Alignment Analysis
 
-#### Mesh Pairing Inputs 📂
+#### Mesh Pairing Input
 
 - Synapse CSV: A CSV file containing center of mass data for the synapses. The file must be formatted with the following column names: `labels`, `comX`, `comY`, `comZ`, `vol`, `SA`, `halfSA`, `sphericity`, `maxFeretLength`, `minFeretLength`, `aspectRatio`. These columns should contain numerical labels for each synapse, followed by its center of mass coordinates (x, y, z), volume, surface area, half surface area, sphericity, maximum Feret length, minimum Feret length, and aspect ratio, respectively. 
-- Vesicle CSV: Same as Synapse CSV but for Vesicles.
+- Vesicle CSV: Same as Synapse CSV but for vesicles.
 - COM Search Radius: The search radius from a synapses' center of mass. The program will only pair a vesicle cloud with a synapse if its center of mass falls within the cubic volume with this radius.
 
-#### Alignment Inputs 📂
+#### Mesh Pairing Output
+
+- Pairing CSV: A CSV file containing the pairing information of the synapses and vesicles.
+- Unpaired CSV: unpaired vesicle clouds with measurements
+
+#### Alignment Input
 
 - Synapse Folder: A folder containing STL files of synapses, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
 - Vesicle Folder: A folder containing STL files of vesicles, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
 - Pairing CSV: A CSV file containing the pairing information of the synapses and vesicles. The file must be formatted with the following column names: `synLabel` and `vesLabel`. These columns should contain numerical labels for each synapse and vesicle, respectively. 
 
-#### Alignment Output 📂
+#### Alignment Output 
 
 Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 
