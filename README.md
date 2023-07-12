@@ -34,13 +34,13 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 
 ## Using the Menu
 
-### "Export MultiROI Labels as Meshes"
+### Export MultiROI Labels as Meshes
 
 1) Select 1 or more MultiROIs that you'd like to fully export in the Properties tab on Dragonfly
 2) Run the Menu Item
 3) Select where you'd like your meshes exported (Each MultiROI will get its own folder within the directory you choose)
 
-### "Launch Syn2Ves Program"
+### Launch Syn2Ves Program
 
 1) Run the menu item to launch the program
 2) Select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
@@ -83,7 +83,7 @@ Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
 
 Center of mass positions in this data will differ from the positions reported in other outputs for two reasons. First, other outputs are using Dragonfly's center of mass calculation rather than PyVista's mesh.center(). Second, the meshes have been manipulated such that their centers of mass maintain relative position, but not their original coordinates. 
 
-### "Launch Syn2Ves Visualizer"**
+### Launch Syn2Ves Visualizer
 
 1) Run the menu item to launch the program
 2) Select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
@@ -118,6 +118,8 @@ We are using [pyinstaller](https://www.pyinstaller.org/#) to compile Syn2Ves int
 First, ensure you have a `main.spec` and `resources.qrc` file. If you don't, run the following commands:
 
 ```
+pyi-makespec main.py
+
 pyinstaller main.spec
 
 pyrcc5 resources.qrc -o resources.py
