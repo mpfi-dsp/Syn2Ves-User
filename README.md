@@ -51,7 +51,7 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 
 #### Mesh Pairing Inputs 📂
 
-**Synapse CSV 🔬**
+##### Synapse CSV 🔬
 A CSV file containing center of mass data for the synapses. The file must be formatted with the following column names: `labels`, `comX`, `comY`, `comZ`, `vol`, `SA`, `halfSA`, `sphericity`, `maxFeretLength`, `minFeretLength`, `aspectRatio`. These columns should contain numerical labels for each synapse, followed by its center of mass coordinates (x, y, z), volume, surface area, half surface area, sphericity, maximum Feret length, minimum Feret length, and aspect ratio, respectively. 
 
 **Vesicle CSV 🔬**
