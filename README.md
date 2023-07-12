@@ -15,7 +15,7 @@ Welcome to the Syn2Ves Program Documentation! 🎉
 
 While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS Dragonfly software. This section will give a brief overview of how to install files from the repository such that our tools appear as menu items.
 
-### Installing Menu Items
+### Menu Items
 
 1)  Download all of the files in the **Menu Items** folder (inside [“Dragonfly”](/Dragonfly)) and **main.exe** (under releases) 
 2)  Click Windows Key + R to open the run command
@@ -24,7 +24,7 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 5)	In this folder, drag in all of the downloaded files (Put each of the files into here individually, not the entire folder)
 6)	Open the **config.ini** file, and set the paths to the appropriate locations (make sure all slashes are back slashes)
 
-### Installing Macros
+### Macros
 
 1)  Download all of the files in the **Macro** folder (inside [“Dragonfly”](/Dragonfly)) 
 2)  Click Windows Key + R to open the run command
