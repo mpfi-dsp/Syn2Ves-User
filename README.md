@@ -17,13 +17,13 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
 ### Collect your files
 
 1) Clone the GitHub repository
-  - Click on the green **Code** button at the top of the page
-  - Select **Download Zip**
-  - Extract all files from the **Syn2Ves** folder to your computer
+   - Click on the green **Code** button at the top of the page
+   - Select **Download Zip**
+   - Extract all files from the **Syn2Ves** folder to your computer
 2) Download the Syn2Ves app
-  - Under **Releases**, to the right of the file list, select **Syn2Ves Application**
-  - Select **syn2ves.exe**
-  - After syn2ves.exe has finished downloading, move it to the **Syn2Ves** folder
+   - Under **Releases**, to the right of the file list, select **Syn2Ves Application**
+   - Select **syn2ves.exe**
+   - After syn2ves.exe has finished downloading, move it to the **Syn2Ves** folder
 
 ### Menu Items
 
