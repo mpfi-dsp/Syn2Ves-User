@@ -10,10 +10,20 @@ Welcome to the Syn2Ves Program Documentation! 🎉
 
 **Syn2Ves** is a program designed to pair synapses with vesicle clouds based on position, and quantify the alignment of these pairings.
 
-
 ## Installation for use in Dragonfly
 
 While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS Dragonfly software. This section will give a brief overview of how to install repository files such that our tools appear as menu items.
+
+### Collect your files
+
+1) Clone the GitHub repository
+  - Click on the green **Code** button at the top of the page
+  - Select **Download Zip**
+  - Extract all files from the **Syn2Ves** folder to your computer
+2) Download the Syn2Ves app
+  - Under **Releases**, to the right of the file list, select **Syn2Ves Application**
+  - Select **syn2ves.exe**
+  - After syn2ves.exe has finished downloading, move it to the **Syn2Ves** folder
 
 ### Menu Items
 
