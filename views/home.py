@@ -15,7 +15,7 @@ from globals import UNIT_OPS, WORKFLOWS, MAX_DIRS_PRUNE, UNIT_PX_SCALARS, DEFAUL
 from typings import FileType
 from utils import get_complimentary_color
 
-HEADER = "Synapse and Vescile Offset Analysis"
+HEADER = "Synapse-Vesicle Cloud Offset Analysis"
 DESC = "Upload all files, and click \"Start\" to begin!"
 
 class HomePage(QWidget):
