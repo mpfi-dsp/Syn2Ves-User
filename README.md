@@ -49,49 +49,44 @@ Next, we need to make some of these files discoverable by ORS Dragonfly.
 
 ## Using the Menu
 
-Start by opening Dragonfly. The menu items should appear at the top of the window under the heading **Synapse-Vesicle Tools**. Load your ORS session of interest. This session must contain segmented synapses and vesicle clouds. Synapses should be saved as classes in a MultiROI with other synapses. Vesicle clouds should be saved a sclasses in a MultiROI with other vesicle clouds.  
+Start by opening Dragonfly. The menu items should appear at the top of the window under the heading **Synapse-Vesicle Tools**. 
+
+Load your ORS session of interest. This session must contain segmented synapses and vesicle clouds. Synapses should be saved as classes in a MultiROI with other synapses. Vesicle clouds should be saved as classes in a MultiROI with other vesicle clouds.  
 
 ### Export MultiROI Labels as Meshes
 
 1) Using **ctrl + L-click**, select the synapses and vesicle cloud MultiROIs under the **Properties** section
-2) Open the **Synapse-Vesicle Tools** dropdown menu and select **Export MultiROI Labels as Meshes
-3) Select where you'd like your meshes exported. Each MultiROI will get its own folder within the directory you choose
+2) Open the **Synapse-Vesicle Tools** dropdown menu and select **Export MultiROI Labels as Meshes**
+3) Select a folder for output. Each MultiROI will get its own folder within the directory you choose
 4) This step varies in duration. Roughly, it takes tens of minutes to export hundreds of classes. You may not use ORS Dragonfly for anything else while running the macro. 
 
-#### Output
+Output: 
 
 - Folders containing meshes
 - CSVs with measurements for each MultiROI class
 
 ### Launch Syn2Ves Program
 
-1) Run the menu item to launch the program
-2) Select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
-3) Select your Synapse and Vesicle CSVs, which are also exports of the previous menu
-4) Run Pairing
-5) Select the "paired" CSV exported from the Pairing workflow as your Pairing CSV for Alignment Analysis
-6) Run Alignment Analysis
+1) Open the **Synapse-Vesicle Tools** dropdown menu and select **Launch Syn2Ves Program**. A new window will appear 
+2) Select the two mesh folders for synapses and vesicle clouds as prompted. These are outputs from the **Export MultiROI Labels as Meshes** macro
 
-#### Mesh Pairing Input
+#### For Pairing
+1) Select your Synapse and Vesicle CSV. These are outputs from the **Export MultiROI Labels as Meshes** macro
+2) Enter a **center of mass (CoM) search radius** in microns (E.g. "2"). The program will only pair a vesicle cloud with a synapse if its CoM falls within the cubic volume with this radius. We have found that a search radius of 2 microns leads to near-perfect (~99%) pairing accuracy.
+3) **Set Output Folder**
+4) **Run Mesh Pairing**
 
-- Synapse CSV: A CSV file containing center of mass data for the synapses. The file must be formatted with the following column names: `labels`, `comX`, `comY`, `comZ`, `vol`, `SA`, `halfSA`, `sphericity`, `maxFeretLength`, `minFeretLength`, `aspectRatio`. These columns should contain numerical labels for each synapse, followed by its center of mass coordinates (x, y, z), volume, surface area, half surface area, sphericity, maximum Feret length, minimum Feret length, and aspect ratio, respectively. 
-- Vesicle CSV: Same as Synapse CSV but for vesicles.
-- COM Search Radius (microns): The search radius from a synapses' center of mass. The program will only pair a vesicle cloud with a synapse if its center of mass falls within the cubic volume with this radius.
+Output: 
 
-#### Mesh Pairing Output
+- **paired.csv**: A CSV file containing the pairing information of the synapses and vesicles
+- **unpaired.csv**: A CSV file containing the measurements of unpaired vesicle clouds
 
-- Pairing CSV: A CSV file containing the pairing information of the synapses and vesicles.
-- Unpaired CSV: unpaired vesicle clouds with measurements
+#### For Alignment
+1) Click on **Set Pairing CSV**, then select **paired.csv**
+2) **Set Output Folder**
+3) **Run Alignment Analysis**
 
-#### Alignment Input
-
-- Synapse Folder: A folder containing STL files of synapses, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
-- Vesicle Folder: A folder containing STL files of vesicles, named numerically (example: 1.stl, 2.stl, etc). The program will only consider files with the ".stl" extension.
-- Pairing CSV: A CSV file containing the pairing information of the synapses and vesicles. The file must be formatted with the following column names: `synLabel` and `vesLabel`. These columns should contain numerical labels for each synapse and vesicle, respectively. 
-
-#### Alignment Output 
-
-Outputs a CSV file named `syn2ves_output.csv` containing the following columns:
+Outputs a CSV file named **align.csv** containing the following columns:
 
 - `synLabel`: numerical label of the synapse
 - `vesLabel`: numerical label of the vesicle
