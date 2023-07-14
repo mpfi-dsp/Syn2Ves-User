@@ -108,9 +108,10 @@ Center of mass positions in this data will differ from the positions reported in
 
 ### Launch Syn2Ves Visualizer
 
-1) Run the menu item to launch the program
-2) Select the two mesh folders. These are the exports of the "Export MultiROI Labels as Meshes" menu we just ran
-3) Use the "paired.csv" output from the pairing step to find IDs for a synapse-vesicle cloud pair. Enter these IDs in the appropriate prompt
+1) Open the **Synapse-Vesicle Tools** dropdown menu and select **Launch Syn2Ves Visualizer**
+2) Select the two mesh folders as prompted. These are outputs from the **Export MultiROI Labels as Meshes** menu we just ran
+3) Use **paired.csv** to find IDs for a synapse-vesicle cloud pair. Enter these IDs as prompted
+4) A window will appear with an interactive 3D plotter
 
 ## For Developers
 
