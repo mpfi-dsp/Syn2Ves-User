@@ -8,4 +8,4 @@ matplotlib
 pandas
 typing_extensions
 pyinstaller
-pyvista
+git+https://github.com/anders0nj/pyvista.git@release/0.39.1
