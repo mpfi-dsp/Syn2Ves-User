@@ -20,7 +20,7 @@ First, download all of the necessary files for this project.
 1) Clone the GitHub repository
    - Click on the green **Code** button at the top of the page
    - Select **Download Zip**
-   - Extract all files from the **Syn2Ves** folder to your computer
+   - Extract all files from the **Syn2Ves** folder to your computer. Later instructions will refer to this directory as **...\Syn2Ves**
 2) Download the Syn2Ves app
    - Under **Releases**, to the right of the file list, select **Syn2Ves Application**
    - Select **syn2ves.exe**
@@ -49,13 +49,14 @@ Next, we need to make some of these files discoverable by ORS Dragonfly.
 
 ## Using the Menu
 
-Start by opening Dragonfly. The menu items should appear under the heading **Synapse-Vesicle Tools**.
+Start by opening Dragonfly. The menu items should appear at the top of the window under the heading **Synapse-Vesicle Tools**. Load your ORS session of interest. This session must contain segmented synapses and vesicle clouds. Synapses should be saved as classes in a MultiROI with other synapses. Vesicle clouds should be saved a sclasses in a MultiROI with other vesicle clouds.  
 
 ### Export MultiROI Labels as Meshes
 
-1) Select 1 or more MultiROIs that you'd like to fully export in the Properties tab on Dragonfly
-2) Run the Menu Item
-3) Select where you'd like your meshes exported (Each MultiROI will get its own folder within the directory you choose)
+1) Using **ctrl + L-click**, select the synapses and vesicle cloud MultiROIs under the **Properties** section
+2) Open the **Synapse-Vesicle Tools** dropdown menu and select **Export MultiROI Labels as Meshes
+3) Select where you'd like your meshes exported. Each MultiROI will get its own folder within the directory you choose
+4) This step varies in duration. Roughly, it takes tens of minutes to export hundreds of classes. You may not use ORS Dragonfly for anything else while running the macro. 
 
 #### Output
 
