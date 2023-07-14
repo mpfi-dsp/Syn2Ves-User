@@ -10,11 +10,12 @@ Welcome to the Syn2Ves Program Documentation! 🎉
 
 **Syn2Ves** is a program designed to pair synapses with vesicle clouds based on position, and quantify the alignment of these pairings.
 
-## Installation for use in Dragonfly
+## Installation for use in ORS Dragonfly
 
 While the software can be used on it's own, Syn2Ves was intended to be used as a part of the ORS Dragonfly software. This section will give a brief overview of how to install repository files such that our tools appear as menu items.
 
 ### Collect your files
+First, download all of the necessary files for this project. 
 
 1) Clone the GitHub repository
    - Click on the green **Code** button at the top of the page
@@ -25,22 +26,26 @@ While the software can be used on it's own, Syn2Ves was intended to be used as a
    - Select **syn2ves.exe**
    - After syn2ves.exe has finished downloading, move it to the **Syn2Ves** folder
 
+Next, we need to make some of these files discoverable by ORS Dragonfly. 
+
+### Macro
+
+1)  Navigate to **...\Syn2Ves\Dragonfly\Macros** on your computer
+2)  Click **Windows Key + R** to open the run command
+3)	Type **%AppData%** and click **OK**
+4)	This brings you to **...\AppData\Roaming**. Navigate back ot the **AppData** folder, then **...\AppData\Local\ORS\Dragonfly\pythonUserExtensions\Macros**. Make sure that you selected the newest version of ORS Dragonfly
+6)	Drag **multiRoiToMesh.py** from **...\Syn2Ves\Dragonfly\Macros** into the **...\pythonUserExtensions\Macros** folder. Leave this folder open for easy access
+
 ### Menu Items
 
-1)  Download all of the files in the **Menu Items** folder (inside [“Dragonfly”](/Dragonfly)) and **main.exe** (under releases) 
-2)  Click Windows Key + R to open the run command
-3)	Type %AppData% and click OK
-4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\GenericMenuItems
-5)	In this folder, drag in all of the downloaded files (Put each of the files into here individually, not the entire folder)
-6)	Open the **config.ini** file, and set the paths to the appropriate locations (make sure all slashes are back slashes)
-
-### Macros
-
-1)  Download all of the files in the **Macro** folder (inside [“Dragonfly”](/Dragonfly)) 
-2)  Click Windows Key + R to open the run command
-3)	Type %AppData% and click OK
-4)	Go to Local\ORS\Dragonfly(newest version)\pythonUserExtensions\Macros
-5)	In this folder, drag in the .py file
+1)  Navigate to **...\Syn2Ves\Dragonfly\Menu Items** on your computer
+2)  Click **Windows Key + R** to open the run command
+3)	Type **%AppData%** and click **OK**
+4)	This brings you to **...\AppData\Roaming**. Navigate back ot the **AppData** folder, then **...\AppData\Local\ORS\Dragonfly\pythonUserExtensions\GenericMenuItems**. Make sure that you selected the newest version of ORS Dragonfly
+6)	Individually drag each of files from **...\Syn2Ves\Dragonfly\Menu Items** into the **GenericMenuItems** folder
+7)	Open the **config.ini** file
+    - After **dragonfly_macro_path =**, replace the placeholder text with the directory for the new macro. It should look something like this: **...\AppData\Local\ORS\Dragonfly\pythonUserExtensions\Macros\multiRoiToMesh.py**
+    - After **syn2ves_exe_path =**, replace the placeholder text with the directory for the **Syn2Ves Application** file. It should look somehting like this: **...\Syn2Ves\syn2ves.exe**
 
 ## Using the Menu
 
