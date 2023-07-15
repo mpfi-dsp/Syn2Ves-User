@@ -62,8 +62,8 @@ class LaunchSyn2Ves_f855ce02e9e211ed859744032c94bd8b(UserDefinedMenuItem):
 
         # Use the variables to run macro
         print(f"Syn2Ves path: {syn2ves_exe_path}")
-        # os.system(f'"{syn2ves_exe_path}"')
-        subprocess.Popen([syn2ves_exe_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        os.system(f'"{syn2ves_exe_path}"')
+        # subprocess.Popen([syn2ves_exe_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         pass
         
